@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.3.1.final using JasperReports Library version 5.5.2  -->
+<!-- 2017-02-28T11:19:18 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="relatorio-itens-empresa-setor" pageWidth="595" pageHeight="842" whenNoDataType="NoPages" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="5fb72904-fc1c-4183-9e7b-c2e96dfc201c">
+	<property name="ireport.zoom" value="1.7715610000000035"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="USUARIO" class="java.lang.String"/>
+	<parameter name="LOGO" class="java.io.InputStream">
+		<defaultValueExpression><![CDATA[$P{LOGO}!= null ? $P{LOGO} : new ByteArrayInputStream(null)]]></defaultValueExpression>
+	</parameter>
+	<parameter name="EMPRESA" class="java.lang.Long"/>
+	<parameter name="DATA_EMISSAO_RELATORIO" class="java.lang.String" isForPrompting="false">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+		<defaultValueExpression><![CDATA["EMITIDO EM "
++ new java.text.SimpleDateFormat("dd/MM/yyyy").format(new java.util.Date())
++ " �S "
++ new java.text.SimpleDateFormat("HH:mm").format(new java.util.Date())]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT
+     P.`id`,
+     P.`descricao`,
+     P.`numeroSerie`,
+     P.`numeroPatrimonio`,
+     P.`valor`,
+     E.`nomeFantasia`,
+     S.`descricao` AS setor
+FROM
+     `peca` P INNER JOIN `setor` S ON P.`setor_id` = S.`id`
+     INNER JOIN `empresa` E ON P.`empresa_id` = E.`id`
+WHERE
+     P.empresa_id = $P{EMPRESA}
+GROUP BY
+     setor,
+     P.id,
+     P.`descricao`]]>
+	</queryString>
+	<field name="id" class="java.lang.Long">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="descricao" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="numeroSerie" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="numeroPatrimonio" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="valor" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="nomeFantasia" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="setor" class="java.lang.String"/>
+	<variable name="EMISSAO" class="java.lang.String" incrementType="Report">
+		<variableExpression><![CDATA["RELA��O DE ITENS POR SETOR - " + $P{DATA_EMISSAO_RELATORIO} + " ("+ $P{USUARIO}+")"]]></variableExpression>
+		<initialValueExpression><![CDATA["RELA��O DE ITENS POR SETOR - " + $P{DATA_EMISSAO_RELATORIO} + " ("+ $P{USUARIO}+")"]]></initialValueExpression>
+	</variable>
+	<variable name="valor_1" class="java.math.BigDecimal" resetType="Group" resetGroup="setor" calculation="Sum">
+		<variableExpression><![CDATA[$F{valor}]]></variableExpression>
+	</variable>
+	<variable name="valor_2" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{valor}]]></variableExpression>
+	</variable>
+	<group name="setor">
+		<groupExpression><![CDATA[$F{setor}]]></groupExpression>
+		<groupHeader>
+			<band height="38">
+				<textField>
+					<reportElement mode="Opaque" x="50" y="4" width="505" height="15" forecolor="#000000" backcolor="#E6E6E6" uuid="a4b6b27f-634f-41f1-8269-989277a05485"/>
+					<textElement>
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{setor}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement mode="Opaque" x="0" y="4" width="50" height="15" backcolor="#E6E6E6" uuid="d3c07a56-3c08-4459-bf0c-bed1c172202b"/>
+					<text><![CDATA[SETOR :]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Transparent" x="122" y="22" width="173" height="15" backcolor="#E6E6E6" uuid="0b391e2f-fb28-40d9-9d6b-18e1de51f17f"/>
+					<textElement>
+						<font size="8"/>
+					</textElement>
+					<text><![CDATA[Descri��o]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Transparent" x="0" y="22" width="122" height="15" backcolor="#E6E6E6" uuid="13b8bb2b-aedc-4149-b0f4-b89a366cd4d6"/>
+					<textElement>
+						<font size="8"/>
+					</textElement>
+					<text><![CDATA[N� de S�rie]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="295" y="22" width="95" height="15" uuid="f7b3377a-079b-43af-82ea-679f3a276b3c"/>
+					<textElement>
+						<font size="8" isBold="false"/>
+					</textElement>
+					<text><![CDATA[N� Patrim�nio]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="454" y="22" width="100" height="15" uuid="2bdc8951-89af-47ba-a75b-efabed46ff64"/>
+					<textElement textAlignment="Right">
+						<font size="8"/>
+					</textElement>
+					<text><![CDATA[Valor]]></text>
+				</staticText>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="15">
+				<textField pattern="� #,##0.00">
+					<reportElement x="450" y="0" width="100" height="15" forecolor="#666666" uuid="451d8a86-ae2b-4ebc-b3c7-4eab69e56a1e"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{valor_1}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="350" y="0" width="100" height="15" uuid="1f5146d9-c19b-4cad-b144-aec8222ee832"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="8"/>
+					</textElement>
+					<text><![CDATA[TOTAL SETOR:]]></text>
+				</staticText>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="58" splitType="Stretch">
+			<textField>
+				<reportElement x="490" y="0" width="64" height="8" uuid="d0f9846d-b5ed-4e0a-b28c-694e009f242a"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{USUARIO}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="450" y="0" width="54" height="8" uuid="e66874b9-e8c4-452a-90f4-59214d696984"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="6" isBold="false"/>
+				</textElement>
+				<text><![CDATA[USU�RIO:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="134" y="0" width="270" height="20" uuid="baab919e-ff94-4989-a672-df3997d746dc"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[GEST�O DE INVENT�RIO DE TI - CASA DO FERRO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="134" y="20" width="270" height="20" uuid="c7acaa19-5195-4a1d-bb4d-7b505740c506"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[RELA��O DE ITENS POR SETOR]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="195" y="38" width="168" height="15" uuid="c9e0e820-7268-41f9-be16-d88412af509d"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA["Empresa - "+ $F{nomeFantasia}]]></textFieldExpression>
+			</textField>
+			<image>
+				<reportElement x="28" y="8" width="50" height="45" uuid="5733a489-8e6e-4d0a-a25d-5135dcff8da7"/>
+				<imageExpression><![CDATA["/imagens/logo-casadoferro.png"]]></imageExpression>
+			</image>
+			<image>
+				<reportElement x="486" y="20" width="50" height="25" uuid="ed56d0ef-a03d-4599-9962-9f45b84fa4c0"/>
+				<imageExpression><![CDATA["/imagens/logo-code.png"]]></imageExpression>
+			</image>
+		</band>
+	</title>
+	<detail>
+		<band height="21" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="2" width="100" height="15" forecolor="#666666" uuid="57f75be2-9114-4c2d-b3b4-c98e5af4a47c"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{numeroSerie}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="122" y="2" width="173" height="15" forecolor="#666666" uuid="bd6dbe36-37f1-4aaa-a82a-472ebf969c19"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{descricao}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="295" y="0" width="95" height="15" forecolor="#666666" uuid="4ddaf9b6-d71f-4b3e-863a-4c7c38979274"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{numeroPatrimonio}]]></textFieldExpression>
+			</textField>
+			<textField pattern="� #,##0.00">
+				<reportElement x="454" y="0" width="100" height="15" forecolor="#666666" uuid="ea781587-a432-4a1f-8803-1349cc478b7b"/>
+				<textElement textAlignment="Right">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{valor}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="10">
+			<textField>
+				<reportElement x="424" y="0" width="112" height="10" uuid="09628368-95f8-46c4-aabd-8d01a4e4108b"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA["P�g. "+$V{PAGE_NUMBER}+" de"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="537" y="0" width="17" height="10" uuid="725633b9-3cb9-402c-be49-ab1298a26d86"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[" "+$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="0" y="0" width="424" height="10" uuid="0ca50df8-7060-4d21-a872-f6fc7cbcd688"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="6" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{EMISSAO}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="19">
+			<textField pattern="� #,##0.00">
+				<reportElement mode="Opaque" x="450" y="4" width="104" height="15" forecolor="#666666" backcolor="#E6E6E6" uuid="26dee140-fea2-476f-837e-c64dc345ce63"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{valor_2}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="4" width="450" height="15" backcolor="#E6E6E6" uuid="193e2630-d019-4141-978a-c4df4502fc3a"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[TOTAL GERAL:]]></text>
+			</staticText>
+		</band>
+	</summary>
+</jasperReport>

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<persistence version="2.0"
+	xmlns="http://java.sun.com/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+        http://java.sun.com/xml/ns/persistence
+        http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd">
+
+	<persistence-unit name="primary">
+
+		<!-- <jta-data-source>java:jboss/datasources/TiManagerDS</jta-data-source> -->
+
+
+
+		<class>br.com.timanager.modelo.Empresa</class>
+		<class>br.com.timanager.modelo.Garantia</class>
+		<class>br.com.timanager.modelo.HistoricoItemGarantia</class>
+		<class>br.com.timanager.modelo.ItemNotaEntrada</class>
+		<class>br.com.timanager.modelo.NotaFiscalEntrada</class>
+		<class>br.com.timanager.modelo.Peca</class>
+		<class>br.com.timanager.modelo.GarantiaDetalhe</class>
+		<class>br.com.timanager.modelo.Usuario</class>
+		<class>br.com.timanager.modelo.Grupo</class>
+		<class>br.com.timanager.modelo.Autorizacao</class>
+		<class>br.com.timanager.modelo.Marca</class>
+		<class>br.com.timanager.modelo.Setor</class>
+		<class>br.com.timanager.modelo.TipoItem</class>
+		<class>br.com.timanager.modelo.Estoque</class>
+		<class>br.com.timanager.modelo.Movimentacao</class>
+		<class>br.com.timanager.modelo.ParametroSistema</class>
+		<class>br.com.timanager.modelo.Transferencia</class>
+		<class>br.com.timanager.modelo.TransferenciaDetalhe</class>
+		<class>br.com.timanager.modelo.Chamado</class>
+		<class>br.com.timanager.modelo.ChamadoDetalhe</class>
+		<class>br.com.timanager.modelo.Notificacao</class>
+
+		<properties>
+
+			<!-- Properties for Hibernate -->
+			<property name="hibernate.show_sql" value="true" />
+			<property name="hibernate.format_sql" value="true" />
+			<property name="hibernate.use_sql_comments" value="true" />
+			<property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5Dialect" />
+
+			<!-- Uncomment the following two properties for JBoss only -->
+			<property name="hibernate.validator.apply_to_ddl" value="false" />
+			<property name="hibernate.validator.autoregister_listeners"
+				value="false" />
+
+			<property name="javax.persistence.jdbc.url"
+				value="jdbc:mysql://us-cdbr-iron-east-04.cleardb.net/heroku_1982661fd376214?reconnect=true" />
+			<property name="javax.persistence.jdbc.user" value="b00d4f810a6481" />
+			<property name="javax.persistence.jdbc.password" value="65a0b68b" />
+			<property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver" />
+			<property name="hibernate.hbm2ddl.auto" value="update" />
+			<property name="hibernate.event.merge.entity_copy_observer"
+				value="allow" />
+
+		</properties>
+	</persistence-unit>
+
+</persistence>

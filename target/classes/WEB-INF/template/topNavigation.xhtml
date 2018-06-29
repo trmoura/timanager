@@ -1,0 +1,83 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+
+
+	<!-- top navigation -->
+	<div class="top_nav">
+		<div class="nav_menu" style="height: 58px;">
+			<nav>
+				<div class="nav toggle" style="margin-bottom: 10px;">
+					<a id="menu_toggle"><i class="fa fa-bars"></i></a>
+				</div>
+
+				<ul class="nav navbar-nav navbar-right">
+					<li class=""><a href="javascript:;"
+						class="user-profile dropdown-toggle" data-toggle="dropdown"
+						aria-expanded="false">
+						 <p:graphicImage id="foto" cache="false"
+								value="#{controladorHome.fotoUsuarioLogado}" width="100%"
+								height="100%" /> #{seguranca.nomeUsuario.toUpperCase()}<span
+							class=" fa fa-angle-down"></span>
+					</a>
+						<ul class="dropdown-menu dropdown-usermenu pull-right">
+							<li><a href="javascript:;">Meu Perfíl</a></li>
+
+							<li><h:outputLink value="#{request.contextPath}/logout"
+									title="Sair do Sistema">
+									<span class="fa fa-sign-out pull-right" aria-hidden="true"></span>
+									<p:ajax process="@this" />
+									 Sair
+								</h:outputLink></li>
+
+						</ul></li>
+
+					<li role="presentation" class="dropdown"><a
+						href="javascript:;" class="dropdown-toggle info-number"
+						data-toggle="dropdown" aria-expanded="false" style="height: 58px;">
+							<i class="fa fa-envelope-o" style="margin-top: 13px;"></i> <span
+							class="badge bg-green" style="margin-top: 5px;">#{controladorHome.numeroDeNotificacoes}</span>
+					</a>
+						<ul id="menu1" class="dropdown-menu list-unstyled msg_list"
+							role="menu">
+							<h:form id="form-notify">
+								<p:dataScroller value="#{controladorHome.notificacoesUsuario}"
+									var="n" chunkSize="2" scrollHeight="200">
+									<f:facet name="header">
+							           Notificações
+							        </f:facet>
+
+									<p:outputPanel>
+										<div class="row">
+											<div class="col-md-7">
+												<span class="message" style="font-weight: bold">#{n.mensagem}</span>
+											</div>
+											<div class="col-md-5">
+												<h:outputText value="#{n.dataNotificacao}" styleClass="time">
+													<f:convertDateTime pattern="dd.MM.yyyy HH:mm" />
+												</h:outputText>
+
+											</div>
+										</div>
+
+										<div class="row">
+											<div class="col-md-12">
+												<span class="message">#{n.mensagem}</span>
+											</div>
+										</div>
+
+									</p:outputPanel>
+									<hr />
+								</p:dataScroller>
+
+							</h:form>
+						</ul></li>
+				</ul>
+			</nav>
+		</div>
+	</div>
+	<!-- /top navigation -->
+</ui:composition>

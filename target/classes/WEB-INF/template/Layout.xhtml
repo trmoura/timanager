@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" xmlns:o="http://omnifaces.org/ui">
+
+<h:head>
+	<f:facet name="first">
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<!-- Meta, title, CSS, favicons, etc. -->
+		<meta charset="utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+	</f:facet>
+
+	<title><ui:insert name="titulo">Codeweb Tecnologia</ui:insert></title>
+
+	<h:outputStylesheet library="css" name="bootstrap.min.css" />
+	<h:outputStylesheet library="css" name="animate.min.css" />
+	<h:outputStylesheet library="css" name="font-awesome.css" />
+	<h:outputStylesheet library="css" name="font-awesome.min.css" />
+	<h:outputStylesheet library="css" name="style.css" />
+	<h:outputStylesheet library="css" name="custom.css" />
+	<h:outputStylesheet library="css" name="matrix-media.css" />
+	<h:outputStylesheet library="css" name="matrix-style.css" />
+
+	<h:outputScript target="body" library="primefaces"
+		name="jquery/jquery.js" />
+	<h:outputScript target="body" library="js" name="bootstrap.min.js" />
+	<h:outputScript target="body" library="js" name="custom.min.js" />
+	<h:outputScript target="body" library="js" name="jquery.maskMoney.js" />
+	<h:outputScript target="body" library="js" name="util.js" />
+
+
+</h:head>
+
+<h:body styleClass="nav-md">
+
+
+	<p:ajaxStatus styleClass="ajax-status" onsuccess="configurarMoeda()">
+		<f:facet name="start">
+			<h:graphicImage library="img" name="ajax-loader.gif"
+				styleClass="ajax-gif" />
+		</f:facet>
+		<f:facet name="complete">
+			<h:outputText value="" />
+		</f:facet>
+	</p:ajaxStatus>
+
+	<div class="container body">
+		<div class="main_container">
+			<div class="col-md-3 left_col">
+				<div class="left_col scroll-view">
+					<div class="sidemenu">
+						<ui:include src="sideMenu.xhtml" />
+					</div>
+				</div>
+			</div>
+
+			<div class="topnavigation">
+				<ui:include src="topNavigation.xhtml" />
+			</div>
+
+		</div>
+
+
+		<div class="content">
+			<ui:include src="content.xhtml" />
+		</div>
+
+
+
+		<div class="footer">
+			<ui:include src="footer.xhtml" />
+		</div>
+
+	</div>
+
+
+	<script>
+			function configurarMoeda() {
+				$(".moeda").maskMoney({ decimal: ",", thousands: ".", allowZero: true });
+			}
+			
+			$(document).ready(function() {
+				configurarMoeda();
+			});
+	</script>
+
+</h:body>
+
+</html>

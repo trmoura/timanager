@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.3.1.final using JasperReports Library version 5.5.2  -->
+<!-- 2017-02-28T11:11:06 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="relatorio-itens-empresa-setor" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="5fb72904-fc1c-4183-9e7b-c2e96dfc201c">
+	<property name="ireport.zoom" value="1.7715610000000042"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="zebrado" isDefault="true" mode="Opaque">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[new Boolean(($V{COLUMN_COUNT}.intValue() % 2) == 0)]]></conditionExpression>
+			<style backcolor="#F0F0F0"/>
+		</conditionalStyle>
+	</style>
+	<parameter name="USUARIO" class="java.lang.String"/>
+	<parameter name="LOGO" class="java.io.InputStream">
+		<defaultValueExpression><![CDATA[$P{LOGO}!= null ? $P{LOGO} : new ByteArrayInputStream(null)]]></defaultValueExpression>
+	</parameter>
+	<parameter name="EMPRESA" class="java.lang.Long"/>
+	<parameter name="DATA_EMISSAO_RELATORIO" class="java.lang.String" isForPrompting="false">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+		<defaultValueExpression><![CDATA["EMITIDO EM "
++ new java.text.SimpleDateFormat("dd/MM/yyyy").format(new java.util.Date())
++ " ÀS "
++ new java.text.SimpleDateFormat("HH:mm").format(new java.util.Date())]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT
+
+           SUM(total_count) AS "total",
+           SUM(total_manu_count) AS "total_manu",
+           tipo AS tipoItem,
+           empresa AS empresaItem,
+           descricao
+       FROM
+           (   SELECT
+
+               COUNT(P.id) AS total_count,
+               0 AS total_manu_count,
+               T.descricao AS tipo,
+               E.nomeFantasia AS empresa,
+               P.descricao AS descricao
+           FROM
+               peca P
+           INNER JOIN
+               tipo_de_item T
+                   ON T.id = P.tipo_id
+           INNER JOIN
+               empresa E
+                   ON E.id = P.empresa_id
+          WHERE
+              P.empresa_id = $P{EMPRESA}
+          GROUP BY
+              P.descricao
+          UNION
+          SELECT
+
+              0 AS total_count,
+              COUNT(P.em_manutencao) AS total_manu_count,
+              T.descricao AS tipo,
+              E.nomeFantasia AS empresa,
+              P.descricao AS descricao
+          FROM
+              peca P
+          INNER JOIN
+              tipo_de_item T
+                  ON T.id = P.tipo_id
+          INNER JOIN
+              empresa E
+                  ON E.id = P.empresa_id
+          WHERE
+              P.empresa_id = $P{EMPRESA}
+              AND P.em_manutencao = 'S'
+          GROUP BY
+              P.descricao
+    ) TMP
+ GROUP BY
+     descricao]]>
+	</queryString>
+	<field name="total" class="java.math.BigDecimal"/>
+	<field name="total_manu" class="java.math.BigDecimal"/>
+	<field name="descricao" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="tipo" class="java.lang.String"/>
+	<field name="empresa" class="java.lang.String"/>
+	<variable name="EMISSAO" class="java.lang.String" incrementType="Report">
+		<variableExpression><![CDATA["RELAÇÃO DE ITENS POR SETOR - " + $P{DATA_EMISSAO_RELATORIO} + " ("+ $P{USUARIO}+")"]]></variableExpression>
+		<initialValueExpression><![CDATA["RELAÇÃO DE ITENS POR SETOR - " + $P{DATA_EMISSAO_RELATORIO} + " ("+ $P{USUARIO}+")"]]></initialValueExpression>
+	</variable>
+	<variable name="valor_1" class="java.math.BigDecimal" resetType="Group" resetGroup="setor" calculation="Sum">
+		<variableExpression><![CDATA[]]></variableExpression>
+	</variable>
+	<variable name="valor_2" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[]]></variableExpression>
+	</variable>
+	<group name="setor">
+		<groupExpression><![CDATA[]]></groupExpression>
+		<groupHeader>
+			<band height="38">
+				<staticText>
+					<reportElement mode="Opaque" x="0" y="4" width="553" height="15" backcolor="#E6E6E6" uuid="d3c07a56-3c08-4459-bf0c-bed1c172202b"/>
+					<text><![CDATA[]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Transparent" x="122" y="22" width="173" height="15" backcolor="#E6E6E6" uuid="0b391e2f-fb28-40d9-9d6b-18e1de51f17f"/>
+					<textElement>
+						<font size="8"/>
+					</textElement>
+					<text><![CDATA[Descrição]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Transparent" x="0" y="22" width="122" height="15" backcolor="#E6E6E6" uuid="13b8bb2b-aedc-4149-b0f4-b89a366cd4d6"/>
+					<textElement>
+						<font size="8"/>
+					</textElement>
+					<text><![CDATA[Tipo]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Transparent" x="295" y="22" width="95" height="15" uuid="f7b3377a-079b-43af-82ea-679f3a276b3c"/>
+					<textElement textAlignment="Right">
+						<font size="8" isBold="false"/>
+					</textElement>
+					<text><![CDATA[Total de Itens]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Transparent" x="391" y="22" width="162" height="15" uuid="2bdc8951-89af-47ba-a75b-efabed46ff64"/>
+					<textElement textAlignment="Right">
+						<font size="8"/>
+					</textElement>
+					<text><![CDATA[Total em Manutenção]]></text>
+				</staticText>
+			</band>
+		</groupHeader>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="58" splitType="Stretch">
+			<textField>
+				<reportElement mode="Transparent" x="490" y="0" width="64" height="8" uuid="d0f9846d-b5ed-4e0a-b28c-694e009f242a"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{USUARIO}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement mode="Transparent" x="450" y="0" width="54" height="8" uuid="e66874b9-e8c4-452a-90f4-59214d696984"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="6" isBold="false"/>
+				</textElement>
+				<text><![CDATA[USUÁRIO:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="134" y="0" width="270" height="20" uuid="baab919e-ff94-4989-a672-df3997d746dc"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[GESTÃO DE INVENTÁRIO DE TI - CASA DO FERRO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="134" y="20" width="270" height="20" uuid="c7acaa19-5195-4a1d-bb4d-7b505740c506"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[RELAÇÃO DE ITENS SINTÉTICO]]></text>
+			</staticText>
+			<textField>
+				<reportElement mode="Transparent" x="195" y="38" width="168" height="15" uuid="c9e0e820-7268-41f9-be16-d88412af509d"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA["Empresa - " + $F{empresa}]]></textFieldExpression>
+			</textField>
+			<image>
+				<reportElement x="486" y="20" width="50" height="25" uuid="30fdbfea-0973-47d1-a3ba-5e214647e29b"/>
+				<imageExpression><![CDATA["/imagens/logo-code.png"]]></imageExpression>
+			</image>
+			<image>
+				<reportElement x="28" y="8" width="50" height="45" uuid="22a46e8b-fbe7-4b06-9cd1-f06aa626e2b4"/>
+				<imageExpression><![CDATA["/imagens/logo-casadoferro.png"]]></imageExpression>
+			</image>
+		</band>
+	</title>
+	<detail>
+		<band height="21" splitType="Stretch">
+			<textField>
+				<reportElement style="zebrado" x="0" y="1" width="122" height="20" uuid="d6929917-8864-4998-986e-daca2aa34a42"/>
+				<textFieldExpression><![CDATA[$F{tipo}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="zebrado" x="122" y="1" width="173" height="20" uuid="ed8d6666-6519-4267-abc2-e5166730a36e"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{descricao}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="zebrado" x="295" y="1" width="95" height="20" uuid="45f8fb95-8ffa-439c-a03d-69230a2b4e18"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{total}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="zebrado" x="391" y="1" width="162" height="20" uuid="35c14d4d-5f2f-45a5-8ae9-c2c56923d163"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{total_manu}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="10">
+			<textField>
+				<reportElement x="424" y="0" width="112" height="10" uuid="09628368-95f8-46c4-aabd-8d01a4e4108b"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Pág. "+$V{PAGE_NUMBER}+" de"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="537" y="0" width="17" height="10" uuid="725633b9-3cb9-402c-be49-ab1298a26d86"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[" "+$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="0" y="0" width="424" height="10" uuid="0ca50df8-7060-4d21-a872-f6fc7cbcd688"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="6" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{EMISSAO}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="19">
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="4" width="554" height="15" backcolor="#E6E6E6" uuid="193e2630-d019-4141-978a-c4df4502fc3a"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[]]></text>
+			</staticText>
+		</band>
+	</summary>
+</jasperReport>

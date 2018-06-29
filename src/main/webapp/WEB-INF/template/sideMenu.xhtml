@@ -1,0 +1,126 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+
+
+	<div class="navbar nav_title" style="border: 0;">
+		<h:link outcome="/Home.xhtml" class="site_title">
+			<i class="fa fa-sitemap"></i>
+			<span>TI Manager</span>
+		</h:link>
+	</div>
+
+	<div class="clearfix"></div>
+
+	<!-- menu profile quick info -->
+	<div class="profile">
+		<div class="profile_pic">
+			<h:graphicImage value="/resources/img/img.jpg"
+				styleClass="img-circle profile_img" />
+		</div>
+		<div class="profile_info">
+			<span>Bem Vindo</span>
+			<h2>#{seguranca.nomeUsuario.toUpperCase()}</h2>
+		</div>
+	</div>
+	<!-- /menu profile quick info -->
+
+	<br />
+
+	<!-- sidebar menu -->
+	<div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
+		<div class="menu_section">
+			<div class="clearfix"></div>
+			<ul class="nav side-menu">
+
+				<li><a><i class="fa fa-edit"></i> Cadastros <span
+						class="fa fa-chevron-down"></span></a>
+					<ul class="nav child_menu">
+						<li><h:link value="Setores"
+								outcome="/cadastro/setor/novosetor.xhtml" /></li>
+						<li><h:link value="Marcas"
+								outcome="/cadastro/marca/novamarca.xhtml" /></li>
+						<li><h:link value="Tipo de Item"
+								outcome="/cadastro/item/tipodeitem.xhtml" /></li>
+						<li><h:link value="Itens"
+								outcome="/cadastro/peca/novapeca.xhtml" /></li>
+						<li><h:link value="Grupos"
+								outcome="/cadastro/grupos/novogrupo.xhtml" /></li>
+						<li><h:link value="Usuários"
+								outcome="/cadastro/usuarios/novoUsuario.xhtml" /></li>
+					</ul></li>
+				<li><a><i class="fa fa-desktop"></i> Controle <span
+						class="fa fa-chevron-down"></span></a>
+					<ul class="nav child_menu">
+						<li><h:link value="Garantia"
+								outcome="/controle/garantia/montargarantia.xhtml" /></li>
+						<li><h:link value="Pesquisa de Garantia"
+								outcome="/controle/garantia/pesquisargarantia.xhtml" /></li>
+						<li><h:link value="Baixa de Garantia"
+								outcome="/controle/garantia/baixagarantia.xhtml" /></li>
+						<li><h:link value="Entrada de NF"
+								outcome="/controle/notas/notadeentrada.xhtml" /></li>
+						<li><h:link value="Transferência de Itens"
+								outcome="/controle/transferencia/transferenciadeitens.xhtml" /></li>
+
+					</ul></li>
+				<li><a><i class="fa fa-life-ring"></i> Suporte <span
+						class="fa fa-chevron-down"></span></a>
+					<ul class="nav child_menu">
+						<li><h:link value="Chamado"
+								outcome="/suporte/novochamado.xhtml" /></li>
+						<li><h:link value="Manutenção Chamados"
+								outcome="/suporte/manutecaochamado.xhtml" /></li>
+						<li><h:link value="Consultar Chamados"
+								outcome="/suporte/consultarchamados.xhtml" /></li>
+					</ul></li>
+				<li><a><i class="fa fa-table"></i> Relatórios <span
+						class="fa fa-chevron-down"></span></a>
+					<ul class="nav child_menu">
+						<li><h:link value="Relação Itens/Empresa/Setor"
+								outcome="/relatoriosPages/RelacaoEmpresaSetorPeca.xhtml" /></li>
+						<li><h:link value="Relatório Sintético de Itens"
+								outcome="/relatoriosPages/RelatorioSinteticoItens.xhtml" /></li>
+						<li><h:link value="Relatório de Garantias"
+								outcome="/relatoriosPages/RelatorioGarantiaEmpresa.xhtml" /></li>
+						<li><h:link value="Relatório de Movimentações"
+								outcome="/relatoriosPages/RelatorioMovimentacoes.xhtml" /></li>
+					</ul></li>
+
+				<li><a><i class="fa fa-eye"></i> Consultas <span
+						class="fa fa-chevron-down"></span></a>
+					<ul class="nav child_menu">
+						<li><h:link value="Consulta Mapa Equipamentos"
+								outcome="/consultas/consultaMapaEquipamentos.xhtml" /></li>
+
+					</ul></li>
+
+			</ul>
+		</div>
+
+	</div>
+	<!-- /sidebar menu -->
+
+	<!-- /menu footer buttons -->
+	<div class="sidebar-footer hidden-small">
+		<!-- 		<a data-toggle="tooltip" data-placement="top" title="Settings"> <span -->
+		<!-- 			class="glyphicon glyphicon-cog" aria-hidden="true"></span> -->
+		<!-- 		</a> <a data-toggle="tooltip" data-placement="top" title="FullScreen"> -->
+		<!-- 			<span class="glyphicon glyphicon-fullscreen" aria-hidden="true"></span> -->
+		<!-- 		</a> <a data-toggle="tooltip" data-placement="top" title="Lock"> <span -->
+		<!-- 			class="glyphicon glyphicon-eye-close" aria-hidden="true"></span> -->
+		<!-- 		</a> -->
+
+		<h:outputLink value="#{request.contextPath}/logout" title="Sair do Sistema">
+			<span class="fa fa-reply" aria-hidden="true"></span>
+			<p:ajax process="@this" />
+		</h:outputLink>
+
+	</div>
+	<!-- /menu footer buttons -->
+
+
+</ui:composition>

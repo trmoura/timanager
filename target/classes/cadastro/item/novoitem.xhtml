@@ -1,0 +1,212 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" xmlns:o="http://omnifaces.org/ui"
+	template="/WEB-INF/template/Layout.xhtml" contentType="text/html">
+
+	<div class="ui-fluid">
+		<ui:define name="caminhoDePao">CADASTROS - <b>ITENS</b>
+		</ui:define>
+	</div>
+	<ui:define name="conteudo">
+
+		<f:metadata>
+			<f:event listener="#{controladorCadastroItem.inicializar}"
+				type="preRenderView" />
+
+		</f:metadata>
+
+		<h:form id="frm" enctype="multipart/form-data">
+			<p:toolbar styleClass="toolBar">
+				<p:toolbarGroup>
+					<p:commandButton styleClass="botao" value="Salvar" ajax="true"
+						action="#{controladorCadastroItem.salvar()}"
+						process="@this panelMain" update="@form panelMain frm:tableItens" />
+				</p:toolbarGroup>
+				<p:toolbarGroup align="right">
+					<p:commandButton styleClass="botao" value="Novo"
+						action="#{controladorCadastroItem.novoItem()}" process="@this"
+						update="@form" />
+					<p:button styleClass="botao" value="Pesquisa" />
+				</p:toolbarGroup>
+			</p:toolbar>
+
+			<p:messages id="msg" autoUpdate="false" closable="true" />
+			<div class="ui-fluid">
+				<p:panelGrid id="panelMain" columns="4"
+					columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4"
+					layout="grid" styleClass="ui-panelgrid-blank">
+
+
+					<p:outputLabel for="empresa" value="Empresa" />
+					<p:selectOneMenu id="empresa" immediate="true"
+						value="#{controladorCadastroItem.item.empresa}">
+						<f:selectItem itemLabel="-------" itemValue="" />
+						<f:selectItems value="#{controladorCadastroItem.listagemEmpresas}"
+							var="emp" itemLabel="#{emp.nomeFantasia}" itemValue="#{emp}" />
+					</p:selectOneMenu>
+
+					<p:outputLabel for="desc" value="Descrição" />
+					<p:inputText id="desc"
+						value="#{controladorCadastroItem.item.descricao}" maxlength="100" />
+
+					<p:outputLabel for="dtCadastro" value="Data de Cadastro" />
+					<p:calendar id="dtCadastro"
+						value="#{controladorCadastroItem.item.dataCadastro}"
+						pattern="dd/MM/yyyy" locale="pt" disabled="true" />
+
+					<p:outputLabel for="dtAquisicao" value="Data de Aquisição" />
+					<p:calendar id="dtAquisicao"
+						value="#{controladorCadastroItem.item.dataAquisicao}" />
+
+					<p:outputLabel for="numSerie" value="Nº de Série" />
+					<p:inputText id="numSerie"
+						value="#{controladorCadastroItem.item.numeroSerie}" maxlength="50" />
+
+					<p:outputLabel for="numPatrimonio" value="Nº de Patrimônio" />
+					<p:inputText id="numPatrimonio"
+						value="#{controladorCadastroItem.item.numeroPatrimonio}"
+						maxlength="50" />
+
+					<p:outputLabel for="cond" value="Condição" />
+					<p:selectOneMenu id="cond" immediate="true"
+						value="#{controladorCadastroItem.item.condicao}">
+						<f:selectItem itemLabel="-------" itemValue="" />
+						<f:selectItems value="#{condicoesItem}" var="cond"
+							itemLabel="#{cond.descricao}" itemValue="#{cond}" />
+					</p:selectOneMenu>
+
+					<p:outputLabel for="marca" value="Marca" />
+					<p:selectOneMenu id="marca"
+						value="#{controladorCadastroItem.item.marca}"
+						converter="converterGenerico">
+						<f:selectItem itemLabel="-------" itemValue="" />
+						<f:selectItems value="#{controladorCadastroItem.listagemMarcas}"
+							var="marca" itemLabel="#{marca.descricao}" itemValue="#{marca}" />
+					</p:selectOneMenu>
+					<p:outputLabel for="valor" value="Valor do Item" />
+					<p:inputText id="valor"
+						value="#{controladorCadastroItem.item.valor}" size="10"
+						maxlength="15" styleClass="moeda">
+						<f:convertNumber maxFractionDigits="2" minFractionDigits="2" />
+					</p:inputText>
+
+					<p:outputLabel for="obs" value="Observações" />
+					<p:inputTextarea id="obs"
+						value="#{controladorCadastroItem.item.observacao}" maxlength="150"
+						placeholder="150 caracteres" />
+
+					<p:outputLabel value="QR Code" for="qrc" />
+					<p:barcode id="qrc" value="#{controladorCadastroItem.item.qrcode}"
+						type="qr" style="margin-left: -20px;" />
+
+					<p:outputLabel value="Documento" />
+					<h:panelGroup>
+						<p:fileUpload label="Selecionar Arquivo" uploadLabel="Enviar"
+							allowTypes="/(\.|\/)(pdf)$/" sizeLimit="5242880"
+							cancelLabel="Cancelar"
+							fileUploadListener="#{controladorCadastroItem.handleDocumentoItem}"
+							invalidSizeMessage="Tamanho de arquivo inválido. Tamanho máximo permitido: 5MB"
+							fileLimitMessage="Quantidade de arquivos excedida. Quantidade permitida: 1 (um) arquivo."
+							invalidFileMessage="Formato de arquivo inválido. Formato(s) válido(s): .PDF"
+							multiple="false" required="false" fileLimit="1" mode="advanced"
+							auto="true" process="@this" styleClass="custom" />
+						<p:outputPanel autoUpdate="true"
+							rendered="#{controladorCadastroItem.documentoItem != null}"
+							style="margin-top:5px;">
+							<p:commandLink ajax="false">
+								<i class="fa fa-file-pdf-o fa-1x"></i>
+								<span>Download do Documento</span>
+								<p:fileDownload
+									value="#{controladorCadastroItem.acaoDownloadDOC()}" />
+							</p:commandLink>
+						</p:outputPanel>
+					</h:panelGroup>
+
+					<p:outputLabel />
+					<p:outputLabel />
+
+					<p:outputLabel for="dtDocumento" value="Data do Documento" />
+					<p:calendar id="dtDocumento"
+						value="#{controladorCadastroItem.item.dataDocumento}" />
+
+				</p:panelGrid>
+
+				<p:separator />
+
+				<p:panelGrid id="panelTable" columns="1"
+					columnClasses="ui-grid-col-12" layout="grid"
+					styleClass="ui-panelgrid-blank">
+					<p:dataTable id="tableItens"
+						value="#{controladorCadastroItem.registros}" var="item"
+						emptyMessage="Nenhum Registro Encontrado." rows="5"
+						paginator="true" paginatorAlwaysVisible="false"
+						paginatorPosition="bottom">
+						<f:facet name="header">
+							Itens Cadastrados
+						</f:facet>
+
+						<p:column headerText="ID" style="width: 5%;">
+							<h:outputLabel value="#{item.id}" />
+						</p:column>
+
+						<p:column headerText="Descrição" style="width: 25%;">
+							<h:outputLabel value="#{item.descricao}" />
+						</p:column>
+						<p:column headerText="Nº de Série" style="width: 15%;">
+							<h:outputLabel value="#{item.numeroSerie}" />
+						</p:column>
+						<p:column headerText="Nº Patrimônio" style="width: 15%;">
+							<h:outputLabel value="#{item.numeroPatrimonio}" />
+						</p:column>
+						<p:column headerText="Marca" style="width: 15%;">
+							<h:outputLabel value="#{item.marca.descricao}" />
+						</p:column>
+
+						<p:column headerText="Valor Item" style="width: 15%;">
+							<h:outputText value="#{item.valor}">
+								<f:convertNumber currencySymbol="R$" type="currency" locale="pt" />
+							</h:outputText>
+						</p:column>
+
+						<p:column headerText="Ações" style="width: 5%;">
+							<p:commandButton icon="fa fa-pencil"
+								actionListener="#{controladorCadastroItem.acaoEditarItemSelecionado}"
+								update="frm:panelMain" process="@this"
+								style="width: 20px;margin-left: 20px;">
+								<p:confirm header="Confirmação" message="Editar Item ?"
+									icon="ui-icon-alert" />
+								<f:attribute name="idItem" value="#{item.id}" />
+							</p:commandButton>
+
+							<p:confirmDialog global="true" showEffect="fade"
+								hideEffect="fade">
+								<p:commandButton value="Sim" type="button" process="@this"
+									styleClass="ui-confirmdialog-yes" icon="ui-icon-check">
+								</p:commandButton>
+								<p:commandButton value="Não" type="button"
+									styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+							</p:confirmDialog>
+						</p:column>
+
+					</p:dataTable>
+				</p:panelGrid>
+
+
+			</div>
+		</h:form>
+		<script type="text/javascript">
+				function start() {
+				    PF('modalAguarde').show();
+				}
+				 
+				function stop() {
+				    PF('modalAguarde').hide();
+				}
+				
+		</script>
+
+	</ui:define>
+
+</ui:composition>

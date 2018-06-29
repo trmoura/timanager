@@ -1,0 +1,151 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" xmlns:o="http://omnifaces.org/ui"
+	template="/WEB-INF/template/Layout.xhtml" contentType="text/html">
+
+	<div class="ui-fluid">
+		<ui:define name="caminhoDePao">RELÁTORIO - <b>MOVIMENTAÇÕES
+				DE ITENS </b>
+		</ui:define>
+	</div>
+	<ui:define name="conteudo">
+		<f:metadata>
+			<f:event
+				listener="#{controladorRelatorioMovimentacoes.inicializar()}"
+				type="preRenderView" />
+
+		</f:metadata>
+
+		<h:form id="frm" enctype="multipart/form-data">
+
+
+			<p:messages id="msg" autoUpdate="false" closable="true" />
+			<div class="ui-fluid">
+
+
+				<p:panelGrid id="panelMain" columns="6"
+					columnClasses="ui-grid-col-1,ui-grid-col-3,ui-grid-col-1,ui-grid-col-3,ui-grid-col-1,ui-grid-col-3"
+					layout="grid" styleClass="ui-panelgrid-blank">
+
+					<p:outputLabel for="empresa" value="Empresa" />
+					<p:selectOneMenu id="empresa" immediate="true"
+						value="#{controladorRelatorioMovimentacoes.empresa}">
+						<f:selectItem itemLabel="-------" itemValue="" />
+						<f:selectItems
+							value="#{controladorRelatorioMovimentacoes.empresas}" var="emp"
+							itemLabel="#{emp.nomeFantasia}" itemValue="#{emp}" />
+						<p:ajax event="change" update="btDown"
+							listener="#{controladorRelatorioMovimentacoes.desabilitadoBotao()}" />
+					</p:selectOneMenu>
+
+				</p:panelGrid>
+
+				<p:panelGrid id="panelPesquisa" columns="6"
+					columnClasses="ui-grid-col-1,ui-grid-col-3,ui-grid-col-1,ui-grid-col-3,ui-grid-col-1,ui-grid-col-3"
+					layout="grid" styleClass="ui-panelgrid-blank">
+
+					<p:outputLabel for="pes" value="Pesquisar" />
+					<p:inputText id="pes" value="#{controladorRelatorioMovimentacoes.filtro}"
+						maxlength="100" placeholder="Pesquisa um Item" />
+					<p:commandButton styleClass="botao" ajax="true"
+						actionListener="#{controladorRelatorioMovimentacoes.pesquisarPeca}"
+						onclick="PF('dlgPecas').show()" ignoreAutoUpdate="true"
+						icon="fa fa-search"
+						style="width: 40px; margin-top: 1px !important;"
+						process="@this pes" update="selecaoPecaPanel msg" />
+
+				</p:panelGrid>
+
+				<p:panelGrid id="panelBotoes" columns="6"
+					columnClasses="ui-grid-col-1,ui-grid-col-1,ui-grid-col-1,ui-grid-col-5,ui-grid-col-1,ui-grid-col-3"
+					layout="grid" styleClass="ui-panelgrid-blank">
+					
+					<p:outputLabel/>
+
+
+					<p:commandButton id="btPes" styleClass="botao" value="Pesquisar"
+						actionListener="#{controladorRelatorioMovimentacoes.carregarDadosListagem()}"
+						icon="fa fa-search"
+						style="width: 90px; margin-top: 1px !important;"
+						process="@this empresa" update="@form" />
+
+					<p:commandButton id="btDown" styleClass="botao" value="Download"
+						ajax="false"
+						disabled="#{controladorRelatorioMovimentacoes.desabilitar}"
+						icon="fa fa-download"
+						style="width: 90px; margin-top: 1px !important;">
+						<p:fileDownload
+							value="#{controladorRelatorioMovimentacoes.acaoDownload()}" />
+					</p:commandButton>
+
+				</p:panelGrid>
+
+				<p:dialog widgetVar="dlgPecas" resizable="false" responsive="true"
+					modal="true" width="75%" draggable="false" closable="true"
+					position="center">
+
+					<h:panelGroup id="selecaoPecaPanel" layout="block"
+						styleClass="ui-fluid">
+						<p:dataTable id="pecasTable" var="p"
+							value="#{controladorRelatorioMovimentacoes.listagemPecas}"
+							selection="#{controladorRelatorioMovimentacoes.pecaSelecionada}"
+							paginator="true" paginatorAlwaysVisible="false" rows="5"
+							paginatorPosition="bottom" reflow="true" rowKey="#{p.id}"
+							style="width:100%" styleClass="selecao-custom">
+							<f:facet name="header">
+								<p:outputLabel value="Selecione um Item." />
+							</f:facet>
+							<p:column selectionMode="single"
+								style="width:35px;text-align:center" />
+
+							<p:column headerText="ID" style="text-align: center; width: 5%">
+								<h:outputText value="#{p.id}" />
+							</p:column>
+							<p:column headerText="Descrição">
+								<h:outputText value="#{p.descricao}"
+									style="text-align: center;width: 30%;" />
+							</p:column>
+							<p:column headerText="Nº Série">
+								<h:outputText value="#{p.numeroSerie}"
+									style="text-align: center;width: 5%;" />
+							</p:column>
+							<p:column headerText="Patrimônio">
+								<h:outputText value="#{p.numeroPatrimonio}"
+									style="text-align: center;width: 3%;" />
+							</p:column>
+
+							<p:column headerText="Marca" style="width: 10%;">
+								<h:outputText value="#{p.marca.descricao}" />
+							</p:column>
+
+							<p:column headerText="Nota Fiscal"
+								filterBy="#{p.numeroDocumento}" style="width: 15%;">
+								<h:outputText value="#{p.numeroDocumento}" />
+							</p:column>
+
+							<p:column headerText="Empresa" style="width: 15%;">
+								<h:outputText value="#{p.empresa.nomeFantasia}" />
+							</p:column>
+							<f:facet name="footer">
+								<p:commandButton id="btSelect" value="Selecionar"
+									update="frm:pes" process="pecasTable"
+									action="#{controladorRelatorioMovimentacoes.getDescricaoPecasSelecionadas()}"
+									icon="ui-icon-check" title="ok"
+									oncomplete="PF('dlgPecas').hide()" ignoreAutoUpdate="true"
+									style="width: 15%;">
+								</p:commandButton>
+
+							</f:facet>
+							<p:ajax event="rowSelect" process="@this pecasTable" update="@form" />
+						</p:dataTable>
+					</h:panelGroup>
+				</p:dialog>
+
+			</div>
+		</h:form>
+
+	</ui:define>
+
+</ui:composition>

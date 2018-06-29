@@ -1,0 +1,178 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" xmlns:o="http://omnifaces.org/ui"
+	template="/WEB-INF/template/Layout.xhtml" contentType="text/html">
+
+	<div class="ui-fluid">
+		<ui:define name="caminhoDePao">SUPORTE - <b>CONSULTAR
+				CHAMADOS</b>
+		</ui:define>
+	</div>
+	<ui:define name="conteudo">
+
+		<f:metadata>
+			<f:event listener="#{controladorPesquisaChamado.inicializar}"
+				type="preRenderView" />
+
+		</f:metadata>
+
+		<h:form id="frm">
+
+			<div id="msgs">
+				<p:messages id="msg" autoUpdate="false" closable="true" />
+			</div>
+			<div class="ui-fluid">
+
+				<p:panelGrid id="panelMain" columns="8"
+					columnClasses="ui-grid-col-1,ui-grid-col-3,ui-grid-col-1,ui-grid-col-3,ui-grid-col-1,ui-grid-col-2,ui-grid-col-1"
+					layout="grid" styleClass="ui-panelgrid-blank">
+
+					<p:outputLabel for="dtInicial" value="Data inicial" />
+					<p:calendar id="dtInicial"
+						value="#{controladorPesquisaChamado.dataInicial}"
+						pattern="dd/MM/yyyy" locale="pt" />
+
+					<p:outputLabel for="dtFinal" value="Data Final" />
+					<p:calendar id="dtFinal"
+						value="#{controladorPesquisaChamado.dataFinal}"
+						pattern="dd/MM/yyyy" locale="pt" />
+
+					<p:outputLabel for="tecnico" value="Técnico Resp." />
+					<p:selectOneMenu id="tecnico"
+						value="#{controladorPesquisaChamado.tecnico}"
+						converter="converterGenerico">
+						<f:selectItem itemLabel="-------" itemValue="" />
+						<f:selectItems value="#{controladorPesquisaChamado.tecnicos}"
+							var="t" itemLabel="#{t.nome}" itemValue="#{t}" />
+					</p:selectOneMenu>
+
+
+					<p:commandButton id="btAdd" styleClass="botao" value="Pesquisar"
+						actionListener="#{controladorPesquisaChamado.pesquisarChamados()}"
+						icon="fa fa-search"
+						style="width: 90px; margin-top: 1px !important;"
+						process="@this dtInicial dtFinal tecnico"
+						update="frm:panelTable frm:msg" />
+
+				</p:panelGrid>
+
+
+				<p:separator />
+
+				<p:panelGrid id="panelTable" columns="1"
+					columnClasses="ui-grid-col-12" layout="grid"
+					styleClass="ui-panelgrid-blank">
+					<p:dataTable id="chamadosTable" widgetVar="chamadosTable"
+						value="#{controladorPesquisaChamado.listagemChamados}" var="c"
+						emptyMessage="Nenhum Registro Encontrado." rows="10"
+						paginator="true" paginatorAlwaysVisible="false"
+						paginatorPosition="bottom">
+						<f:facet name="header">
+							<p:panelGrid id="panelPesquisa" columns="2"
+								styleClass="ui-panelgrid-blank">
+								<p:outputLabel value="Chamados Registrados" />
+								<p:inputText id="globalFilter"
+									onkeyup="PF('chamadosTable').filter()" style="width:350px"
+									placeholder="Pesquise por: técnico ou situação" />
+							</p:panelGrid>
+						</f:facet>
+
+						<p:column headerText="ID" style="width: 2%;">
+							<h:outputLabel value="#{c.id}" />
+						</p:column>
+
+						<p:column headerText="Empresa" style="width:5%;">
+							<h:outputLabel value="#{c.empresa.nomeFantasia}" />
+						</p:column>
+
+						<p:column headerText="Data Abertura" sortBy="#{c.dataAbertura}"
+							style="width:4%;text-align:center" filterBy="#{c.dataAbertura}"
+							filterStyle="display: none !important;">
+							<h:outputText value="#{c.dataAbertura}">
+								<f:convertDateTime type="date" dateStyle="short"
+									pattern="dd/MM/yyyy" />
+							</h:outputText>
+						</p:column>
+
+						<p:column headerText="Data Encer."
+							style="width:3%;text-align:center">
+							<h:outputLink id="dtEncTable" value="#">
+								<h:outputText value="#{c.dataEncerramento}">
+									<f:convertDateTime type="date" dateStyle="short"
+										pattern="dd/MM/yyyy" />
+								</h:outputText>
+							</h:outputLink>
+							<p:tooltip id="toolEnc" for="dtEncTable"
+								value="Data de Encerramento do Chamado" showEffect="clip"
+								hideEffect="explode" position="left" />
+						</p:column>
+
+						<p:column headerText="Técnico" style="width:5%;"
+							filterBy="#{c.tecnico.nome}"
+							filterStyle="display: none !important;">
+							<h:outputLabel value="#{c.tecnico.nome}" />
+						</p:column>
+
+						<p:column headerText="Situação" style="width:5%;text-align:center"
+							filterBy="#{c.situacaoChamado.descricao}"
+							filterStyle="display: none !important;">
+							<h:outputText value="#{c.situacaoChamado.descricao}" />
+						</p:column>
+
+						<p:column headerText="Descrição"
+							style="width:10%;text-align:center">
+							<h:outputText value="#{c.descricaoChamado}" />
+						</p:column>
+
+						<p:column headerText="Ações" style="width: 2%;">
+
+							<p:commandButton icon="fa fa-search"
+								actionListener="#{controladorChamado.acaoEditarChamadoSelecionado}"
+								update="frm:panelChamdo"
+								oncomplete="PF('chamadoDialog').show();" process="@this"
+								style="width: 20px;margin-left: 10px;">
+								<f:attribute name="idChamado" value="#{c.id}" />
+							</p:commandButton>
+						</p:column>
+					</p:dataTable>
+				</p:panelGrid>
+
+				<p:dialog header="Detalhes do Chamado" widgetVar="chamadoDialog"
+					resizable="false" responsive="true" modal="true" width="55%">
+					<div class="ui-fluid">
+						<p:panelGrid id="panelChamdo" columns="4"
+							columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4"
+							layout="grid" styleClass="ui-panelgrid-blank">
+
+							<p:outputLabel for="dtAbertura" value="Data de Abertura" />
+							<h:outputText id="dtAbertura"
+								value="#{controladorChamado.chamado.dataAbertura}">
+								<f:convertDateTime locale="pt_BR" dateStyle="long"
+									pattern="dd/MM/yyyy HH:mm" />
+							</h:outputText>
+
+							<p:outputLabel for="dgTecnico" value="Técnico Res." />
+							<h:outputText id="dgTecnico"
+								value="#{controladorChamado.chamado.tecnico.nome}" />
+
+							<p:outputLabel for="setor" value="Setor" />
+							<h:outputText id="setor"
+								value="#{controladorChamado.chamado.setor.descricao}" />
+
+							<p:outputLabel for="solicitante" value="Solicitante" />
+							<h:outputText id="solicitante"
+								value="#{controladorChamado.chamado.usuario.nome}" />
+
+						</p:panelGrid>
+					</div>
+				</p:dialog>
+
+
+			</div>
+		</h:form>
+
+	</ui:define>
+
+</ui:composition>

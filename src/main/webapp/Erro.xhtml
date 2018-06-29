@@ -1,0 +1,18 @@
+<ui:composition template="/WEB-INF/template/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<ui:define name="titulo">Erro</ui:define>
+
+	<ui:define name="corpo">
+		<h1>Erro ao processar sua requisição.</h1>
+
+		<div style="float: center; position: absolute; left: 40%; top: 40%;">
+			<h:graphicImage library="images" name="Sad-Smiley.png" />
+		</div>
+
+	</ui:define>
+</ui:composition>

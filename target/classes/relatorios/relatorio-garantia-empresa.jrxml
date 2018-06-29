@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.3.1.final using JasperReports Library version 5.5.2  -->
+<!-- 2017-03-03T07:47:39 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="relatorio-garantia-empresa" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="7e1e7b55-a939-47d0-a558-106a744a1686">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<import value="java.io.InputStream"/>
+	<style name="zebrado" isDefault="true" mode="Opaque">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[new Boolean(($V{COLUMN_COUNT}.intValue() % 2) == 0)]]></conditionExpression>
+			<style backcolor="#F0F0F0"/>
+		</conditionalStyle>
+	</style>
+	<parameter name="USUARIO" class="java.lang.String"/>
+	<parameter name="LOGO" class="java.io.InputStream">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+		<defaultValueExpression><![CDATA[$P{LOGO}!= null ? $P{LOGO} : new ByteArrayInputStream(null)]]></defaultValueExpression>
+	</parameter>
+	<parameter name="DATA_EMISSAO_RELATORIO" class="java.lang.String" isForPrompting="false">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+		<defaultValueExpression><![CDATA["EMITIDO EM "
++ new java.text.SimpleDateFormat("dd/MM/yyyy").format(new java.util.Date())
++ " - "
++ new java.text.SimpleDateFormat("HH:mm").format(new java.util.Date())]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="observacao" class="java.lang.String">
+		<fieldDescription><![CDATA[observacao]]></fieldDescription>
+	</field>
+	<field name="situacao" class="com.dominio.DominioSituacaoGarantia">
+		<fieldDescription><![CDATA[situacao]]></fieldDescription>
+	</field>
+	<field name="prazoEmMeses" class="java.lang.Integer">
+		<fieldDescription><![CDATA[prazoEmMeses]]></fieldDescription>
+	</field>
+	<field name="vencida" class="java.lang.Boolean">
+		<fieldDescription><![CDATA[vencida]]></fieldDescription>
+	</field>
+	<field name="baixada" class="com.dominio.DominioSimNao">
+		<fieldDescription><![CDATA[baixada]]></fieldDescription>
+	</field>
+	<field name="usuario" class="com.model.Usuario">
+		<fieldDescription><![CDATA[usuario]]></fieldDescription>
+	</field>
+	<field name="dataInicial" class="java.util.Date">
+		<fieldDescription><![CDATA[dataInicial]]></fieldDescription>
+	</field>
+	<field name="id" class="java.lang.Long">
+		<fieldDescription><![CDATA[id]]></fieldDescription>
+	</field>
+	<field name="prazoEmMesesGarantia" class="java.lang.Integer">
+		<fieldDescription><![CDATA[prazoEmMesesGarantia]]></fieldDescription>
+	</field>
+	<field name="empresa" class="com.model.Empresa">
+		<fieldDescription><![CDATA[empresa]]></fieldDescription>
+	</field>
+	<field name="class" class="java.lang.Class">
+		<fieldDescription><![CDATA[class]]></fieldDescription>
+	</field>
+	<field name="dataCadastro" class="java.util.Date">
+		<fieldDescription><![CDATA[dataCadastro]]></fieldDescription>
+	</field>
+	<field name="dataFinal" class="java.util.Date">
+		<fieldDescription><![CDATA[dataFinal]]></fieldDescription>
+	</field>
+	<variable name="EMISSAO" class="java.lang.String" incrementType="Report">
+		<variableExpression><![CDATA["RELATÓRIO DE GARANTIA POR EMPRESA - " + $P{DATA_EMISSAO_RELATORIO} + " ("+ $P{USUARIO}+")"]]></variableExpression>
+		<initialValueExpression><![CDATA["RELATÓRIO DE GARANTIA POR EMPRESA  - " + $P{DATA_EMISSAO_RELATORIO} + " ("+ $P{USUARIO}+")"]]></initialValueExpression>
+	</variable>
+	<title>
+		<band height="69" splitType="Stretch">
+			<staticText>
+				<reportElement mode="Transparent" x="134" y="0" width="270" height="20" uuid="621bb57a-174c-4b6f-b9c1-fb910ff09447"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[GEST�O DE INVENT�RIO DE TI - CASA DO FERRO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="450" y="0" width="54" height="8" uuid="94aa960d-283c-4ef5-bbd6-1fe6e5be6ac2"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="6" isBold="false"/>
+				</textElement>
+				<text><![CDATA[USU�RIO:]]></text>
+			</staticText>
+			<textField>
+				<reportElement mode="Transparent" x="490" y="0" width="64" height="8" uuid="d09422cc-8648-47f4-8cd8-df34f13cfb5a"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{USUARIO}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement mode="Transparent" x="134" y="20" width="270" height="20" uuid="e4b724fb-1c5d-46e1-8d78-53b78b1de54b"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[RELA��O DE GARANTIAS POR EMPRESA]]></text>
+			</staticText>
+			<textField>
+				<reportElement mode="Transparent" x="195" y="38" width="168" height="15" uuid="9a75578d-6337-4de4-8252-6333f37eaad2"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA["Empresa - " + $F{empresa}.getNomeFantasia()]]></textFieldExpression>
+			</textField>
+			<image>
+				<reportElement x="28" y="8" width="50" height="45" uuid="b94ee72e-58ed-4eb8-b189-bfb398d8bee4"/>
+				<imageExpression><![CDATA["/imagens/logo-casadoferro.png"]]></imageExpression>
+			</image>
+			<image>
+				<reportElement x="486" y="20" width="50" height="25" uuid="ce512ab6-b34d-4727-94fc-0d134c2742a6"/>
+				<imageExpression><![CDATA["/imagens/logo-code.png"]]></imageExpression>
+			</image>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="14" splitType="Stretch">
+			<staticText>
+				<reportElement stretchType="RelativeToBandHeight" mode="Opaque" x="0" y="0" width="50" height="14" backcolor="rgba(219, 219, 219, 0.5019608)" uuid="e7a33099-a437-4729-b430-2c052d3c0605"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[ID]]></text>
+			</staticText>
+			<staticText>
+				<reportElement stretchType="RelativeToBandHeight" mode="Opaque" x="50" y="0" width="70" height="14" backcolor="rgba(219, 219, 219, 0.5019608)" uuid="b18e92b6-d477-4587-9199-97a43be051d7"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Data inicio]]></text>
+			</staticText>
+			<staticText>
+				<reportElement stretchType="RelativeToBandHeight" mode="Opaque" x="120" y="0" width="80" height="14" backcolor="rgba(219, 219, 219, 0.5019608)" uuid="84097f74-9954-40c6-b78c-814f9973148a"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Data final]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="200" y="0" width="101" height="14" backcolor="rgba(219, 219, 219, 0.5019608)" uuid="0283cc04-9fc4-4c00-9c2d-be7b52850ef6"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Situação Garantia]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="301" y="0" width="100" height="14" backcolor="rgba(219, 219, 219, 0.5019608)" uuid="92dc167f-f3ca-4b0b-a2ed-807743276cf8"/>
+				<textElement textAlignment="Right">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Meses]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="401" y="0" width="153" height="14" backcolor="rgba(219, 219, 219, 0.5019608)" uuid="3ef7328a-60eb-4567-a420-38f3aceafea1"/>
+				<textElement textAlignment="Right"/>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="410" y="0" width="100" height="14" uuid="e98f059a-a70d-4c6d-9169-65b08abcf167"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Baixada?]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="14" splitType="Stretch">
+			<textField>
+				<reportElement style="zebrado" x="0" y="0" width="50" height="14" uuid="f3db133e-23a3-47dc-ba8b-820ccfcb26be"/>
+				<textFieldExpression><![CDATA[$F{id}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement style="zebrado" x="50" y="0" width="70" height="14" uuid="e7d8eb47-a1b1-49fe-b817-40b22e83d3a5"/>
+				<textFieldExpression><![CDATA[$F{dataInicial}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement style="zebrado" x="120" y="0" width="80" height="14" uuid="85560350-198c-4670-aead-92e3ccb44a56"/>
+				<textFieldExpression><![CDATA[$F{dataFinal}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="zebrado" x="201" y="0" width="100" height="14" uuid="5cfa7d09-e0ab-4cc4-9283-de20ec17fddd"/>
+				<textFieldExpression><![CDATA[$F{situacao}.getDescricao()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="zebrado" positionType="FixRelativeToBottom" x="301" y="0" width="100" height="14" uuid="c3712cb9-745e-41f0-98b9-f44028c545e1"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{prazoEmMesesGarantia}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="zebrado" x="410" y="0" width="100" height="14" uuid="3deb74fe-b71c-4049-b1f1-46ea92070204"/>
+				<textElement textAlignment="Left"/>
+				<textFieldExpression><![CDATA[$F{baixada}.getDescricao()]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="10" splitType="Stretch">
+			<textField evaluationTime="Report">
+				<reportElement x="0" y="0" width="424" height="10" uuid="9c4fa601-5069-4cc8-9b49-3f8a42a84de8"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="6" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{EMISSAO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="424" y="0" width="112" height="10" uuid="65382449-3b22-4a7a-8821-d395a663b48a"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA["P�g. "+$V{PAGE_NUMBER}+" de"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="537" y="0" width="17" height="10" uuid="2ecea9fb-3416-4212-b2d6-f49d16623f78"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[" "+$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="14">
+			<staticText>
+				<reportElement stretchType="RelativeToBandHeight" mode="Opaque" x="0" y="0" width="554" height="14" backcolor="rgba(219, 219, 219, 0.5019608)" uuid="d477e15a-d1e2-4bf0-8d72-17e8eabf867f"/>
+				<text><![CDATA[]]></text>
+			</staticText>
+		</band>
+	</summary>
+</jasperReport>

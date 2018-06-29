@@ -1,0 +1,122 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" xmlns:o="http://omnifaces.org/ui"
+	template="/WEB-INF/template/Layout.xhtml" contentType="text/html">
+
+	<div class="ui-fluid">
+		<ui:define name="caminhoDePao">CONTROLE - <b>BAIXA DE
+				GARANTIA</b>
+		</ui:define>
+	</div>
+	<ui:define name="conteudo">
+		<f:metadata>
+			<f:event listener="#{controladorBaixaGarantia.inicializar()}"
+				type="preRenderView" />
+
+		</f:metadata>
+
+		<h:form id="frm" enctype="multipart/form-data">
+
+
+			<p:messages id="msg" autoUpdate="true" closable="true" />
+			<div class="ui-fluid">
+
+
+				<p:panelGrid id="panelTable" columns="1"
+					columnClasses="ui-grid-col-12" layout="grid"
+					styleClass="ui-panelgrid-blank">
+					<p:dataTable id="tablePecas" rowIndexVar="linha"
+						value="#{controladorBaixaGarantia.listagem}" var="g"
+						emptyMessage="Nenhum Registro Encontrado." rows="5"
+						paginator="true" paginatorAlwaysVisible="false"
+						paginatorPosition="bottom">
+						<f:facet name="header">
+							Garantias Vencidas - (Não baixadas)
+			    </f:facet>
+
+						<p:column headerText="ID" style="width: 3%;">
+							<h:outputLabel value="#{g.id}" />
+						</p:column>
+
+						<p:column headerText="Data Inicio" priority="3"
+							style="width: 10%;">
+							<h:outputText value="#{g.dataInicial}">
+								<f:convertDateTime pattern="dd/MM/yyyy" />
+							</h:outputText>
+						</p:column>
+
+						<p:column headerText="Data Final" priority="3" style="width: 10%;">
+							<h:outputText value="#{g.dataFinal}">
+								<f:convertDateTime pattern="dd/MM/yyyy" />
+							</h:outputText>
+						</p:column>
+
+						<p:column headerText="Situação" style="width: 10%;">
+							<h:outputText value="#{g.situacao.descricao}" />
+						</p:column>
+						
+						<p:column headerText="Meses" style="width: 5%;text-align: center !important;">
+							<h:outputText value="#{g.prazoEmMesesGarantia}" />
+						</p:column>
+						
+
+						<p:column headerText="Baixada" style="width: 5%;text-align: center !important;">
+							<h:outputText value="#{g.baixada.descricao}"/>
+						</p:column>
+
+						<p:column headerText="Ações" style="width: 5%;">
+							<p:panelGrid id="panelBotoes" columns="2"
+								columnClasses="ui-grid-col-3" layout="grid"
+								styleClass="ui-panelgrid-blank">
+
+								<p:commandButton id="btnVisualizar" icon="fa fa-search"
+									update=":frm:panelDetail"
+									oncomplete="PF('garantiaDialog').show()"
+									title="Visualizar Garantia"
+									style="width: 30px;margin-left: 15px;">
+									<f:setPropertyActionListener value="#{g}"
+										target="#{controladorBaixaGarantia.garantia}" />
+								</p:commandButton>
+
+								<p:commandButton id="btnEdit" icon="fa fa-check"
+									action="#{controladorBaixaGarantia.BaixarGarantia()}"
+									style="width: 30px;margin-left: 25px;margin-right: 25px;" title="Baixar Garantia"
+									update="tablePecas frm:msg" process="@this">
+									<f:setPropertyActionListener value="#{g}"
+										target="#{controladorBaixaGarantia.garantia}" />
+								</p:commandButton>
+							</p:panelGrid>
+						</p:column>
+					</p:dataTable>
+
+					<p:dialog header="Garantia Selecionada" widgetVar="garantiaDialog"
+						modal="true" showEffect="fade" hideEffect="fade" resizable="false"
+						responsive="true">
+						<p:outputPanel id="panelDetail" style="text-align:center;">
+							<p:panelGrid id="panelGarantia" columns="2"
+								columnClasses="ui-grid-col-4,ui-grid-col-8" layout="grid"
+								style="text-align: left;">
+
+								<h:outputLabel value="Id" />
+								<h:outputText value="#{controladorBaixaGarantia.garantia.id}" />
+
+								<h:outputLabel value="Empresa" />
+								<h:outputText
+									value="#{controladorBaixaGarantia.garantia.empresa.nomeFantasia}" />
+
+								<h:outputLabel value="Observação" />
+								<h:outputText
+									value="#{controladorBaixaGarantia.garantia.observacao}" />
+
+							</p:panelGrid>
+						</p:outputPanel>
+					</p:dialog>
+				</p:panelGrid>
+			</div>
+		</h:form>
+
+	</ui:define>
+
+</ui:composition>

@@ -1,0 +1,107 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" xmlns:o="http://omnifaces.org/ui"
+	template="/WEB-INF/template/Layout.xhtml" contentType="text/html">
+
+	<div class="ui-fluid">
+		<ui:define name="caminhoDePao">CONTROLE - <b>PESQUISA
+				NOTAS FISCAIS</b>
+		</ui:define>
+	</div>
+	<ui:define name="conteudo">
+
+
+		<h:form id="frm" enctype="multipart/form-data">
+
+
+			<p:messages id="msg" autoUpdate="false" closable="true" />
+			<div class="ui-fluid">
+
+
+				<p:panelGrid id="panelMain" columns="6"
+					columnClasses="ui-grid-col-1,ui-grid-col-3,ui-grid-col-1,ui-grid-col-1,ui-grid-col-3,ui-grid-col-2"
+					layout="grid" styleClass="ui-panelgrid-blank">
+
+					<p:outputLabel for="dtInicial" value="Data inicial" />
+					<p:calendar id="dtInicial"
+						value="#{controladorPesquisaNotasFiscal.dataInicial}"
+						pattern="dd/MM/yyyy" locale="pt" />
+
+					<p:outputLabel value="a" />
+
+					<p:outputLabel for="dtFinal" value="Data Final" />
+					<p:calendar id="dtFinal"
+						value="#{controladorPesquisaNotasFiscal.dataFinal}"
+						pattern="dd/MM/yyyy" locale="pt" />
+
+					<p:commandButton id="btAdd" styleClass="botao" value="Pesquisar"
+						actionListener="#{controladorPesquisaNotasFiscal.pesquisarGarantia()}"
+						icon="fa fa-search"
+						style="width: 90px; margin-top: 1px !important;"
+						process="@this dtInicial dtFinal" update="frm:panelTable frm:msg" />
+
+				</p:panelGrid>
+
+				<p:separator />
+
+				<p:panelGrid id="panelTable" columns="1"
+					columnClasses="ui-grid-col-12" layout="grid"
+					styleClass="ui-panelgrid-blank">
+					<p:dataTable id="tablePecas" rowIndexVar="linha"
+						value="#{controladorPesquisaNotasFiscal.listaDeNotas}" var="n"
+						emptyMessage="Nenhum Registro Encontrado." rows="5"
+						paginator="true" paginatorAlwaysVisible="false"
+						paginatorPosition="bottom">
+						<f:facet name="header">
+							Garantias
+			    </f:facet>
+
+						<p:column headerText="ID" style="width: 3%;">
+							<h:outputLabel value="#{n.numeroNota}" />
+						</p:column>
+
+						<p:column headerText="Data de Emissão" priority="3"
+							style="width: 10%;">
+							<h:outputText value="#{n.dataEmissao}">
+								<f:convertDateTime pattern="dd/MM/yyyy" />
+							</h:outputText>
+						</p:column>
+
+						<p:column headerText="Situação" style="width: 15%;">
+							<h:outputText value="#{n.situacao.descricao}" />
+						</p:column>
+
+						<p:column headerText="Valor Total" style="width: 15%;">
+							<h:outputText>
+								<h:outputText value="#{n.valorTotal}">
+									<f:convertNumber currencySymbol="R$" type="currency"
+										locale="pt" />
+								</h:outputText>
+							</h:outputText>
+						</p:column>
+
+
+						<p:column headerText="Ações" style="width: 5%;">
+							<p:panelGrid id="panelBotoes" columns="2"
+								columnClasses="ui-grid-col-3" layout="grid"
+								styleClass="ui-panelgrid-blank">
+
+								<p:button id="btnEdit" icon="fa fa-mail-reply-all"
+									style="width: 30px;margin-left: 30px;"
+									title="Consultar Nota"
+									outcome="/controle/notas/notadeentrada">
+									<f:param name="nota" value="#{n.id}" />
+								</p:button>
+
+							</p:panelGrid>
+						</p:column>
+					</p:dataTable>
+				</p:panelGrid>
+			</div>
+		</h:form>
+
+	</ui:define>
+
+</ui:composition>

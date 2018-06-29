@@ -1,0 +1,201 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" xmlns:o="http://omnifaces.org/ui"
+	template="/WEB-INF/template/Layout.xhtml" contentType="text/html">
+
+	<div class="ui-fluid">
+		<ui:define name="caminhoDePao">SUPORTE - <b>MANUTENÇÃO
+				CHAMADOS</b>
+		</ui:define>
+	</div>
+	<ui:define name="conteudo">
+
+		<f:metadata>
+			<f:event listener="#{controladorChamado.inicializar}"
+				type="preRenderView" />
+
+		</f:metadata>
+
+		<h:form id="frm">
+			<p:toolbar styleClass="toolBar">
+
+				<p:toolbarGroup align="right">
+					<p:commandButton id="btnSalvar" styleClass="botao" value="Salvar"
+						action="#{controladorChamado.salvarEdicao()}"
+						process="@this panelMain"
+						update="@form panelMain frm:chamadosTable"
+						oncomplete="setTimeout(function() { $('#msgs' ).html(''); }, 3000);"
+						disabled="#{!controladorChamado.temChamadoSalvo}" />
+
+					<p:commandButton id="btnEncerrar" styleClass="botao"
+						value="Encerrar" action="#{controladorChamado.encerrarChamado()}"
+						process="@this panelMain"
+						update="@form panelMain frm:chamadosTable"
+						oncomplete="setTimeout(function() { $('#msgs' ).html(''); }, 3000);"
+						disabled="#{!controladorChamado.temChamadoSalvo}">
+						<p:confirm header="Confirmação"
+							message="Confirma encerramento do Chamado ?" icon="ui-icon-alert" />
+					</p:commandButton>
+
+					<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+						<p:commandButton value="Sim" type="button" process="@this"
+							styleClass="ui-confirmdialog-yes" icon="ui-icon-check">
+						</p:commandButton>
+						<p:commandButton value="Não" type="button"
+							styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+					</p:confirmDialog>
+
+
+				</p:toolbarGroup>
+			</p:toolbar>
+
+			<div id="msgs">
+				<p:messages id="msg" autoUpdate="false" closable="true" />
+			</div>
+			<div class="ui-fluid">
+				<p:panelGrid id="panelMain" columns="4"
+					columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4"
+					layout="grid" styleClass="ui-panelgrid-blank">
+
+
+					<p:outputLabel for="dtAbertura" value="Data de Abertura" />
+					<p:calendar id="dtAbertura"
+						value="#{controladorChamado.chamado.dataAbertura}"
+						pattern="dd/MM/yyyy HH:mm" locale="pt_BR" disabled="true" />
+
+					<p:outputLabel for="dtEncerramento" value="Data de Encerramento" />
+					<p:calendar id="dtEncerramento"
+						value="#{controladorChamado.chamado.dataEncerramento}"
+						pattern="dd/MM/yyyy" locale="pt" disabled="true" />
+
+					<p:outputLabel for="situacao" value="Situação" />
+					<p:selectOneMenu id="situacao" immediate="true"
+						value="#{controladorChamado.chamado.situacaoChamado}"
+						disabled="true">
+						<f:selectItem itemLabel="-------" itemValue="" />
+						<f:selectItems value="#{situacoesChamado}" var="sit"
+							itemLabel="#{sit.descricao}" itemValue="#{sit}" />
+					</p:selectOneMenu>
+
+					<p:outputLabel for="setor" value="Setor" />
+					<p:selectOneMenu id="setor"
+						value="#{controladorChamado.chamado.setor}"
+						converter="converterGenerico" effect="fade" filter="true"
+						filterMatchMode="startsWith" disabled="true">
+						<f:selectItem itemLabel="-------" itemValue="" />
+						<f:selectItems value="#{controladorChamado.listagemSetores}"
+							var="setor" itemLabel="#{setor.descricao}" itemValue="#{setor}" />
+					</p:selectOneMenu>
+
+					<p:outputLabel for="empresa" value="Empresa" />
+					<p:selectOneMenu id="empresa"
+						value="#{controladorChamado.chamado.empresa}" disabled="true">
+						<f:selectItem itemLabel="-------" itemValue="" />
+						<f:selectItems value="#{controladorChamado.listagemEmpresas}"
+							var="emp" itemLabel="#{emp.nomeFantasia}" itemValue="#{emp}" />
+						<p:ajax event="change" update="empresa" process="@this" />
+					</p:selectOneMenu>
+
+					<p:outputLabel />
+					<p:outputLabel />
+
+					<p:outputLabel for="desc" value="Descrição Chamado" />
+					<p:inputTextarea id="desc"
+						value="#{controladorChamado.chamado.descricaoChamado}"
+						maxlength="500" readonly="true" />
+
+					<p:outputLabel for="descPar" value="Descrição Parecer" />
+					<p:inputTextarea id="descPar"
+						value="#{controladorChamado.chamado.parecer}" maxlength="500" />
+
+					<p:outputLabel />
+					<p:outputLabel />
+
+
+				</p:panelGrid>
+
+				<p:separator />
+
+				<p:panelGrid id="panelTable" columns="1"
+					columnClasses="ui-grid-col-12" layout="grid"
+					styleClass="ui-panelgrid-blank">
+					<p:dataTable id="chamadosTable"
+						value="#{controladorChamado.listagemChamados}" var="c"
+						emptyMessage="Nenhum Registro Encontrado." rows="5"
+						paginator="true" paginatorAlwaysVisible="false"
+						paginatorPosition="bottom">
+						<f:facet name="header">
+							Chamados Registrados
+						</f:facet>
+
+						<p:column headerText="ID" style="width: 2%;">
+							<h:outputLabel value="#{c.id}" />
+						</p:column>
+
+						<p:column headerText="Empresa" style="width:5%;">
+							<h:outputLabel value="#{c.empresa.nomeFantasia}" />
+						</p:column>
+
+						<p:column headerText="Data Abertura" sortBy="#{c.dataAbertura}"
+							style="width:4%;text-align:center">
+							<h:outputText value="#{c.dataAbertura}">
+								<f:convertDateTime type="date" dateStyle="short"
+									pattern="dd/MM/yyyy" />
+							</h:outputText>
+						</p:column>
+
+						<p:column headerText="Data Encer."
+							style="width:3%;text-align:center">
+							<h:outputLink id="dtEncTable" value="#">
+								<h:outputText value="#{c.dataEncerramento}">
+									<f:convertDateTime type="date" dateStyle="short"
+										pattern="dd/MM/yyyy" />
+								</h:outputText>
+							</h:outputLink>
+							<p:tooltip id="toolEnc" for="dtEncTable"
+								value="Data de Encerramento do Chamado" showEffect="clip"
+								hideEffect="explode" position="left" />
+						</p:column>
+
+						<p:column headerText="Situação" style="width:5%;text-align:center">
+							<h:outputText value="#{c.situacaoChamado.descricao}" />
+						</p:column>
+
+						<p:column headerText="Descrição"
+							style="width:10%;text-align:center">
+							<h:outputText value="#{c.descricaoChamado}" />
+						</p:column>
+
+						<p:column headerText="Ações" style="width: 2%;">
+
+							<p:commandButton icon="fa fa-mail-reply-all"
+								actionListener="#{controladorChamado.acaoEditarChamadoSelecionado}"
+								update="frm:panelMain frm:btnSalvar frm:btnEncerrar" process="@this"
+								style="width: 20px;margin-left: 10px;">
+								<p:confirm header="Confirmação"
+									message="Abrir o chamado Selecionado ?" icon="ui-icon-alert" />
+								<f:attribute name="idChamado" value="#{c.id}" />
+							</p:commandButton>
+
+							<p:confirmDialog global="true" showEffect="fade"
+								hideEffect="fade">
+								<p:commandButton value="Sim" type="button" process="@this"
+									styleClass="ui-confirmdialog-yes" icon="ui-icon-check">
+								</p:commandButton>
+								<p:commandButton value="Não" type="button"
+									styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+							</p:confirmDialog>
+						</p:column>
+
+					</p:dataTable>
+				</p:panelGrid>
+
+
+			</div>
+		</h:form>
+
+	</ui:define>
+
+</ui:composition>

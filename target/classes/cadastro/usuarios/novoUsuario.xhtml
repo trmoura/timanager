@@ -1,0 +1,176 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" xmlns:o="http://omnifaces.org/ui"
+	template="/WEB-INF/template/Layout.xhtml" contentType="text/html">
+
+	<div class="ui-fluid">
+		<ui:define name="caminhoDePao">CADASTROS - <b>USUÁRIO</b>
+		</ui:define>
+	</div>
+	<ui:define name="conteudo">
+
+		<f:metadata>
+			<f:event listener="#{controladorCadastroUsuarios.inicializar}"
+				type="preRenderView" />
+
+		</f:metadata>
+
+		<h:form id="frm">
+			<p:toolbar styleClass="toolBar">
+
+				<p:toolbarGroup align="right">
+					<p:commandButton styleClass="botao" value="Salvar" ajax="true"
+						action="#{controladorCadastroUsuarios.salvar()}"
+						process="@this panelMain"
+						update="@form panelMain frm:tableUsuarios"
+						oncomplete="setTimeout(function() { $('#msgs' ).html(''); }, 3000);" />
+					<p:commandButton styleClass="botao" value="Novo"
+						action="#{controladorCadastroUsuarios.novoUsuario()}"
+						process="@this" update="@form" />
+				</p:toolbarGroup>
+			</p:toolbar>
+
+			<div id="msgs">
+				<p:messages id="msg" autoUpdate="false" closable="true" />
+			</div>
+			<div class="ui-fluid">
+				<p:panelGrid id="panelMain" columns="4"
+					columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4"
+					layout="grid" styleClass="ui-panelgrid-blank">
+
+					<p:outputLabel for="dtCadastro" value="Data de Cadastro" />
+					<p:calendar id="dtCadastro"
+						value="#{controladorCadastroUsuarios.usuario.dataCadastro}"
+						pattern="dd/MM/yyyy" locale="pt" disabled="true" />
+
+					<p:outputLabel value="Email" for="email" />
+					<p:inputText id="email" required="true" maxlength="60"
+						value="#{controladorCadastroUsuarios.usuario.email}" />
+
+					<p:outputLabel value="Nome" for="nome" />
+					<p:inputText id="nome" required="true" maxlength="80"
+						value="#{controladorCadastroUsuarios.usuario.nome}" />
+
+
+					<p:outputLabel value="Grupo" for="grupo" />
+					<p:selectOneMenu id="grupo" required="true"
+						value="#{controladorCadastroUsuarios.grupo}">
+						<f:selectItem itemLabel="Selecione" />
+						<f:selectItems value="#{controladorCadastroUsuarios.listGrupos}"
+							var="g" itemValue="#{g}" itemLabel="#{g.descricao}" />
+					</p:selectOneMenu>
+
+					<p:outputLabel value="Senha" for="pw" />
+					<p:password id="pw"
+						value="#{controladorCadastroUsuarios.usuario.senha}"
+						required="true" autocomplete="false" />
+
+					<p:outputLabel for="cargo" value="Cargo" />
+					<p:selectOneMenu id="cargo" immediate="true"
+						value="#{controladorCadastroUsuarios.usuario.cargo}">
+						<f:selectItem itemLabel="-------" itemValue="" />
+						<f:selectItems value="#{cargos}" var="c"
+							itemLabel="#{c.descricao}" itemValue="#{c}" />
+					</p:selectOneMenu>
+
+					<p:outputLabel for="recebeEmailChamado"
+						value="Receber Email Chamado" />
+					<p:selectOneMenu id="recebeEmailChamado"
+						value="#{controladorCadastroUsuarios.usuario.recebeEmailChamado}">
+						<f:selectItem itemLabel="-------" itemValue="" />
+						<f:selectItems value="#{logicosSimNao}" var="r"
+							itemLabel="#{r.descricao}" itemValue="#{r}" />
+					</p:selectOneMenu>
+
+
+					<p:outputPanel autoUpdate="true" style="text-align:center;">
+						<p:graphicImage id="foto" cache="false"
+							value="#{controladorCadastroUsuarios.foto}" width="100%"
+							height="100%" />
+					</p:outputPanel>
+
+					<p:fileUpload id="fileuploadFoto"
+						label="Selecionar Imagem" uploadLabel="Enviar"
+						allowTypes="/(\.|\/)(jpe?g|png)$/" sizeLimit="1048576"
+						cancelLabel="Cancelar"
+						fileUploadListener="#{controladorCadastroUsuarios.handleFileUploadFoto}"
+						invalidSizeMessage="Tamanho de arquivo inválido. Tamanho máximo permitido: 1MB"
+						fileLimitMessage="Quantidade de arquivos excedida. Quantidade permitida: 1 (um) arquivo."
+						invalidFileMessage="Formato de arquivo inválido. Formato(s) válido(s): .PNG e .JPG"
+						multiple="false" fileLimit="1" mode="advanced" auto="true"
+						process="@this" />
+
+
+				</p:panelGrid>
+
+				<p:separator />
+
+				<p:panelGrid id="panelTable" columns="1"
+					columnClasses="ui-grid-col-12" layout="grid"
+					styleClass="ui-panelgrid-blank">
+					<p:dataTable id="tableUsuarios"
+						value="#{controladorCadastroUsuarios.listUsuarios}" var="u"
+						emptyMessage="Nenhum Registro Encontrado." rows="5"
+						paginator="true" paginatorAlwaysVisible="false"
+						paginatorPosition="bottom">
+						<f:facet name="header">
+							Usuários Cadastrados
+						</f:facet>
+
+						<p:column headerText="ID" style="width: 3%;">
+							<h:outputLabel value="#{u.id}" />
+						</p:column>
+
+						<p:column headerText="Nome" style="width: 25%;">
+							<h:outputLabel value="#{u.nome}" />
+						</p:column>
+
+						<p:column headerText="E-mail" style="width: 20%;">
+							<h:outputLabel value="#{u.email}" />
+						</p:column>
+
+						<p:column headerText="Cargo" style="width: 10%;">
+							<h:outputLabel value="#{u.cargo.descricao}" />
+						</p:column>
+
+						<p:column headerText="Data de Cadastro"
+							style="width:6%;text-align:center">
+							<h:outputText value="#{u.dataCadastro}">
+								<f:convertDateTime type="date" dateStyle="short"
+									pattern="dd/MM/yyyy" />
+							</h:outputText>
+						</p:column>
+
+
+						<p:column headerText="Ações" style="width: 5%;">
+							<p:commandButton icon="fa fa-pencil"
+								actionListener="#{controladorCadastroUsuarios.acaoEditarUsuarioSelecionado}"
+								update="frm:panelMain frm:grupo" process="@this"
+								style="width: 20px;margin-left: 25px;">
+								<p:confirm header="Confirmação" message="Editar Usuário ?"
+									icon="ui-icon-alert" />
+								<f:attribute name="idUsuario" value="#{u.id}" />
+							</p:commandButton>
+
+							<p:confirmDialog global="true" showEffect="fade"
+								hideEffect="fade">
+								<p:commandButton value="Sim" type="button" process="@this"
+									styleClass="ui-confirmdialog-yes" icon="ui-icon-check">
+								</p:commandButton>
+								<p:commandButton value="Não" type="button"
+									styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+							</p:confirmDialog>
+						</p:column>
+
+					</p:dataTable>
+				</p:panelGrid>
+
+
+			</div>
+		</h:form>
+
+	</ui:define>
+
+</ui:composition>

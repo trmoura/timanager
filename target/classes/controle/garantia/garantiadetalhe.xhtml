@@ -1,0 +1,236 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+
+	<div class="ui-fluid">
+
+		<p:panelGrid id="panelTable" columns="1"
+			columnClasses="ui-grid-col-12" layout="grid"
+			styleClass="ui-panelgrid-blank">
+			<p:dataTable id="tablePecas" rowIndexVar="linha"
+				value="#{controladorGarantia.garantia.garantiaDetalhes}" var="det"
+				emptyMessage="Nenhum Registro Encontrado." rows="5" paginator="true"
+				paginatorAlwaysVisible="false" paginatorPosition="bottom">
+				<f:facet name="header">
+							Peças da Garantia
+			    </f:facet>
+
+				<p:column headerText="ID" style="width: 5%;">
+					<h:outputLabel value="#{det.id}" />
+				</p:column>
+
+				<p:column headerText="Item" style="width: 5%;">
+					<h:outputLabel value="#{det.peca.id}" />
+				</p:column>
+
+				<p:column headerText="Peça" style="width: 25%;">
+					<h:outputLabel value="#{det.peca.descricao}" />
+				</p:column>
+
+				<p:column headerText="Nº Série" style="width: 14%;">
+					<h:outputLabel value="#{det.peca.numeroSerie}" />
+				</p:column>
+
+				<p:column headerText="Documento" style="width: 10%;">
+					<h:outputLabel value="#{det.peca.numeroDocumento}" />
+				</p:column>
+
+				<p:column headerText="Valor Peça" style="width: 10%;">
+					<h:outputText value="#{det.peca.valor}">
+						<f:convertNumber currencySymbol="R$" type="currency" locale="pt" />
+					</h:outputText>
+				</p:column>
+
+				<p:column headerText="Situação" style="width: 15%;">
+					<p:selectOneMenu id="cond" immediate="true"
+						value="#{det.situacaoItemGarantia}">
+						<f:selectItems value="#{situacoesItem}" var="sit"
+							itemLabel="#{sit.descricao}" itemValue="#{sit}" />
+					</p:selectOneMenu>
+				</p:column>
+
+				<p:column headerText="Ações" style="width: 10%;">
+					<p:panelGrid id="panelBotoes" columns="3"
+						columnClasses="ui-grid-col-3" layout="grid"
+						styleClass="ui-panelgrid-blank">
+
+						<p:commandButton id="btVisualizar"
+							actionListener="#{controladorGarantia.visualizarDetalheItem}"
+							process="@this" update="frm:panelTable" icon="fa fa-search"
+							title="Visualizar Histórico do item"
+							disabled="#{not controladorGarantia.temGarantiaSalva}"
+							oncomplete="PF('listaHistoricoDialog').show();"
+							style="width: 30px;">
+							<f:attribute name="det" value="#{det}" />
+						</p:commandButton>
+
+						<p:commandButton id="btAddHistorico" process="@this"
+							actionListener="#{controladorGarantia.pegarIdDetalheItem}"
+							update="frm:panelTable" icon="fa fa-plus"
+							title="Adicionar Histórico no item"
+							rendered="#{controladorGarantia.temGarantiaSalva}"
+							oncomplete="PF('historicoDialog').show();"
+							style="width: 30px;margin-left: 15px;">
+							<f:attribute name="det" value="#{det}" />
+						</p:commandButton>
+
+						<p:commandButton id="btExcluir" icon="fa fa-trash-o"
+							title="Excluir Item"
+							actionListener="#{controladorGarantia.acaoRemoverItem(linha)}"
+							rendered="#{not controladorGarantia.temGarantiaSalva}"
+							update="frm:panelTable" process="@this"
+							style="width: 30px;margin-left: 18px;">
+							<p:confirm header="Confirmação"
+								message="Excluir Item Selecionado ?" icon="ui-icon-alert" />
+						</p:commandButton>
+
+					</p:panelGrid>
+					<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+						<p:commandButton value="Sim" type="button" process="@this"
+							styleClass="ui-confirmdialog-yes" icon="ui-icon-check">
+						</p:commandButton>
+						<p:commandButton value="Não" type="button"
+							styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+					</p:confirmDialog>
+					<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+						<p:commandButton value="Sim" type="button" process="@this"
+							styleClass="ui-confirmdialog-yes" icon="ui-icon-check">
+						</p:commandButton>
+						<p:commandButton value="Não" type="button"
+							styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+					</p:confirmDialog>
+				</p:column>
+			</p:dataTable>
+
+			<p:dialog header="Adicionar Histórico no Item"
+				widgetVar="historicoDialog" resizable="false" responsive="true"
+				modal="true" width="55%">
+				<div class="ui-fluid">
+					<p:panelGrid id="panelHistorico" columns="4"
+						columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4"
+						layout="grid" styleClass="ui-panelgrid-blank">
+
+						<p:outputLabel for="motivo" value="Motivo" />
+						<p:selectOneMenu id="motivo" immediate="true"
+							value="#{controladorGarantia.historicoItemGarantia.motivoSaidaEntrada}">
+							<f:selectItem itemLabel="-------" itemValue="" />
+							<f:selectItems value="#{motivosSaida}" var="mt"
+								itemLabel="#{mt.descricao}" itemValue="#{mt}" />
+						</p:selectOneMenu>
+
+						<p:outputLabel for="dtCadastroH" value="Data de Cadastro" />
+						<p:calendar id="dtCadastroH" pattern="dd/MM/yyyy" locale="pt"
+							value="#{controladorGarantia.historicoItemGarantia.dataCadastro}" />
+
+						<p:outputLabel for="dtSaida" value="Data de Saída" />
+						<p:calendar id="dtSaida" pattern="dd/MM/yyyy" locale="pt"
+							value="#{controladorGarantia.historicoItemGarantia.dataSaida}" />
+
+						<p:outputLabel for="dtRetorno" value="Data de Retorno" />
+						<p:calendar id="dtRetorno" locale="pt"
+							value="#{controladorGarantia.historicoItemGarantia.dataRetorno}" />
+
+						<p:outputLabel for="obsH" value="Observações" />
+						<p:inputTextarea id="obsH"
+							value="#{controladorGarantia.historicoItemGarantia.observacao}"
+							maxlength="300" placeholder="300 caracteres" />
+					</p:panelGrid>
+
+					<p:panelGrid id="panelDatas" columns="4"
+						columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4"
+						layout="grid" styleClass="ui-panelgrid-blank">
+
+
+
+						<p:outputLabel value="Documento" />
+						<h:panelGroup>
+							<p:fileUpload id="arquivoHist" label="Selecionar Arquivo"
+								uploadLabel="Enviar" allowTypes="/(\.|\/)(pdf)$/"
+								sizeLimit="5242880" cancelLabel="Cancelar"
+								fileUploadListener="#{controladorGarantia.handleDocumentoHistorico}"
+								invalidSizeMessage="Tamanho de arquivo inválido. Tamanho máximo permitido: 5MB"
+								fileLimitMessage="Quantidade de arquivos excedida. Quantidade permitida: 1 (um) arquivo."
+								invalidFileMessage="Formato de arquivo inválido. Formato(s) válido(s): .PDF"
+								multiple="false" required="false" fileLimit="1" mode="advanced"
+								auto="true" process="@this" styleClass="custom" />
+							<p:outputPanel autoUpdate="true"
+								rendered="#{controladorGarantia.documentoHistorico != null}"
+								style="margin-top:5px;">
+								<p:commandLink ajax="false">
+									<i class="fa fa-file-pdf-o fa-1x"></i>
+									<span>Download do Documento</span>
+									<p:fileDownload
+										value="#{controladorCadastroPeca.acaoDownloadDOC()}" />
+								</p:commandLink>
+							</p:outputPanel>
+						</h:panelGroup>
+					</p:panelGrid>
+					<p:panelGrid id="panelButons" columns="2"
+						columnClasses="ui-grid-col-2,ui-grid-col-2" layout="grid"
+						styleClass="ui-panelgrid-blank">
+
+						<p:commandButton value="Adicionar" process="@this panelHistorico"
+							update="frm panelHistorico msg" styleClass="botao"
+							icon="fa fa-check"
+							actionListener="#{controladorGarantia.adcionarHistoricoItem()}"
+							action="#{controladorGarantia.guardarHIstorico()}"
+							oncomplete="PF('historicoDialog').hide();refresh();">
+						</p:commandButton>
+
+						<p:commandButton value="Cancelar" type="button" styleClass="botao"
+							icon="fa fa-close" />
+					</p:panelGrid>
+				</div>
+
+			</p:dialog>
+			<p:dialog header="Histórico do Item" widgetVar="listaHistoricoDialog"
+				resizable="false" responsive="true" modal="true" width="55%">
+				<div class="ui-fluid">
+					<p:panelGrid id="panelListaHistorico" columns="1"
+						columnClasses="ui-grid-col-12" layout="grid"
+						styleClass="ui-panelgrid-blank">
+
+						<p:dataTable id="tableHistoricos" rowIndexVar="linha"
+							value="#{controladorGarantia.listaVisualizacaoHistorico}" var="h"
+							emptyMessage="Nenhum Registro Encontrado." rows="5"
+							paginator="true" paginatorAlwaysVisible="false"
+							paginatorPosition="bottom">
+							<f:facet name="header">
+								Históricos do Item
+			   				 </f:facet>
+
+							<p:column headerText="ID" style="width: 5%;">
+								<h:outputLabel value="#{h.id}" />
+							</p:column>
+
+							<p:column headerText="Motivo" style="width: 25%;">
+								<h:outputLabel value="#{h.motivoSaidaEntrada.descricao}" />
+							</p:column>
+
+							<p:column headerText="Observações" style="width: 30%;">
+								<h:outputLabel value="#{h.observacao}" />
+							</p:column>
+
+						</p:dataTable>
+
+					</p:panelGrid>
+				</div>
+
+			</p:dialog>
+
+		</p:panelGrid>
+	</div>
+
+	<script type="text/javascript">
+	function refresh() {
+
+	    setTimeout(function () {
+	        location.reload()
+	    }, 100);
+	}
+
+	</script>
+</ui:composition>

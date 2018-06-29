@@ -1,0 +1,212 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" xmlns:o="http://omnifaces.org/ui"
+	template="/WEB-INF/template/Layout.xhtml" contentType="text/html">
+
+	<div class="ui-fluid">
+		<ui:define name="caminhoDePao">CONTROLE - <b>GARANTIA</b>
+		</ui:define>
+	</div>
+	<ui:define name="conteudo">
+		<f:metadata>
+			<f:event listener="#{controladorGarantia.inicializar()}"
+				type="preRenderView" />
+			<o:viewParam name="garantia" value="#{controladorGarantia.garantia}" />
+
+
+		</f:metadata>
+
+		<h:form id="frm" enctype="multipart/form-data">
+			<p:toolbar styleClass="toolBar">
+
+				<p:toolbarGroup align="right">
+					<p:commandButton styleClass="botao" value="Novo"
+						action="#{controladorGarantia.novaGarantia()}" process="@this"
+						update="@form" />
+					<p:commandButton styleClass="botao" value="Salvar" ajax="true"
+						action="#{controladorGarantia.salvar()}"
+						process="@this panelMain frm:panelTable"
+						update="@form panelMain frm:tablePecas"
+						oncomplete="setTimeout(function() { $('#msgs' ).html(''); }, 4000);" />
+					<p:button styleClass="botao" value="Pesquisa"
+						outcome="/controle/garantia/pesquisargarantia" />
+				</p:toolbarGroup>
+			</p:toolbar>
+
+			<div id="msgs">
+				<p:messages id="msg" autoUpdate="false" closable="true" />
+			</div>
+			<div class="ui-fluid">
+				<p:panelGrid id="panelMain" columns="4"
+					columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4"
+					layout="grid" styleClass="ui-panelgrid-blank">
+
+
+					<p:outputLabel for="situacao" value="Situação" />
+					<p:selectOneMenu id="situacao" immediate="true"
+						value="#{controladorGarantia.garantia.situacao}" disabled="true">
+						<f:selectItem itemLabel="-------" itemValue="" />
+						<f:selectItems value="#{situacoesGarantia}" var="sit"
+							itemLabel="#{sit.descricao}" itemValue="#{sit}" />
+					</p:selectOneMenu>
+
+					<p:outputLabel for="dtCadastro" value="Data de Cadastro" />
+					<p:calendar id="dtCadastro"
+						value="#{controladorGarantia.garantia.dataCadastro}"
+						pattern="dd/MM/yyyy" locale="pt" disabled="true" />
+
+					<p:outputLabel for="empresa" value="Empresa" />
+					<p:selectOneMenu id="empresa" immediate="true"
+						value="#{controladorGarantia.garantia.empresa}"
+						disabled="#{controladorGarantia.temGarantiaSalva}">
+						<f:selectItem itemLabel="-------" itemValue="" />
+						<f:selectItems value="#{controladorGarantia.listagemEmpresas}"
+							var="emp" itemLabel="#{emp.nomeFantasia}" itemValue="#{emp}" />
+						<p:ajax event="change" update="empresa" process="@this" />
+					</p:selectOneMenu>
+
+					<p:outputLabel for="dtInicial" value="Data Inicio" />
+					<p:calendar id="dtInicial"
+						value="#{controladorGarantia.garantia.dataInicial}"
+						pattern="dd/MM/yyyy" locale="pt"
+						disabled="#{controladorGarantia.temGarantiaSalva}" />
+
+					<p:outputLabel for="obs" value="Observações" />
+					<p:inputTextarea id="obs"
+						value="#{controladorGarantia.garantia.observacao}" maxlength="300"
+						placeholder="300 caracteres"
+						disabled="#{controladorGarantia.temGarantiaSalva}" />
+
+					<p:outputLabel for="dtFinal" value="Data Final" />
+					<p:calendar id="dtFinal"
+						value="#{controladorGarantia.garantia.dataFinal}"
+						pattern="dd/MM/yyyy" locale="pt"
+						disabled="#{controladorGarantia.temGarantiaSalva}" />
+
+					<p:outputLabel value="Documento" />
+					<h:panelGroup>
+						<p:fileUpload label="Selecionar Arquivo" uploadLabel="Enviar"
+							allowTypes="/(\.|\/)(pdf)$/" sizeLimit="5242880"
+							cancelLabel="Cancelar"
+							fileUploadListener="#{controladorGarantia.handleDocumentoGarantia}"
+							invalidSizeMessage="Tamanho de arquivo inválido. Tamanho máximo permitido: 5MB"
+							fileLimitMessage="Quantidade de arquivos excedida. Quantidade permitida: 1 (um) arquivo."
+							invalidFileMessage="Formato de arquivo inválido. Formato(s) válido(s): .PDF"
+							multiple="false" required="false" fileLimit="1" mode="advanced"
+							auto="true" process="@this" styleClass="custom" />
+						<p:outputPanel autoUpdate="true"
+							rendered="#{controladorGarantia.documento != null}"
+							style="margin-top:5px;">
+							<p:commandLink ajax="false">
+								<i class="fa fa-file-pdf-o fa-1x"></i>
+								<span>Download do Documento</span>
+								<p:fileDownload
+									value="#{controladorGarantia.acaoDownloadDOCGarantia()}" />
+							</p:commandLink>
+						</p:outputPanel>
+					</h:panelGroup>
+
+					<p:outputLabel />
+					<p:outputLabel />
+
+				</p:panelGrid>
+
+				<p:separator />
+				<p:panelGrid id="panelPesquisa" columns="4"
+					columnClasses="ui-grid-col-2,ui-grid-col-7,ui-grid-col-1,ui-grid-col-2"
+					layout="grid" styleClass="ui-panelgrid-blank">
+
+					<p:outputLabel for="pes" value="Pesquisar Peça" />
+					<p:inputText id="pes" value="#{controladorGarantia.filtro}"
+						maxlength="100" />
+					<p:commandButton styleClass="botao" ajax="true"
+						actionListener="#{controladorGarantia.pesquisarPeca}"
+						onclick="PF('dlgPecas').show()" ignoreAutoUpdate="true"
+						icon="fa fa-search"
+						style="width: 40px; margin-top: 1px !important;"
+						process="@this pes" update="frm:panelTable selecaoPecaPanel msg" />
+
+					<p:commandButton id="btAdd" styleClass="botao" value="Adicionar"
+						actionListener="#{controladorGarantia.adicionarPeca}"
+						disabled="#{not controladorGarantia.naoEstaVaiza}"
+						icon="fa fa-plus" style="width: 90px; margin-top: 1px !important;"
+						process="@this" update="frm:panelTable frm:msg pes" />
+
+				</p:panelGrid>
+
+				<p:dialog widgetVar="dlgPecas" resizable="false" responsive="true"
+					modal="true" width="75%" draggable="false" closable="true"
+					position="center">
+
+					<h:panelGroup id="selecaoPecaPanel" layout="block"
+						styleClass="ui-fluid">
+						<p:dataTable id="pecasTable" var="p"
+							value="#{controladorGarantia.listagemPecas}"
+							selection="#{controladorGarantia.listaPecasSelecionadas}"
+							paginator="true" paginatorAlwaysVisible="false" rows="5"
+							paginatorPosition="bottom" reflow="true" rowKey="#{p.id}"
+							style="width:100%" styleClass="selecao-custom">
+							<f:facet name="header">
+								<p:outputLabel value="Selecione Uma ou Mais peças." />
+							</f:facet>
+							<p:column selectionMode="multiple"
+								style="width:35px;text-align:center" />
+
+							<p:column headerText="ID" style="text-align: center; width: 5%">
+								<h:outputText value="#{p.id}" />
+							</p:column>
+							<p:column headerText="Descrição">
+								<h:outputText value="#{p.descricao}"
+									style="text-align: center;width: 30%;" />
+							</p:column>
+							<p:column headerText="Nº Série">
+								<h:outputText value="#{p.numeroSerie}"
+									style="text-align: center;width: 5%;" />
+							</p:column>
+							<p:column headerText="Patrimônio">
+								<h:outputText value="#{p.numeroPatrimonio}"
+									style="text-align: center;width: 3%;" />
+							</p:column>
+
+							<p:column headerText="Marca" style="width: 10%;">
+								<h:outputText value="#{p.marca.descricao}" />
+							</p:column>
+
+							<p:column headerText="Nota Fiscal"
+								filterBy="#{p.numeroDocumento}" style="width: 15%;">
+								<h:outputText value="#{p.numeroDocumento}" />
+							</p:column>
+
+							<p:column headerText="Empresa" style="width: 15%;">
+								<h:outputText value="#{p.empresa.nomeFantasia}" />
+							</p:column>
+							<f:facet name="footer">
+								<p:commandButton id="btSelect" value="Selecionar"
+									update="frm:pes frm:btAdd frm:panelTable" process="pecasTable"
+									action="#{controladorGarantia.getDescricaoPecasSelecionadas()}"
+									icon="ui-icon-check" title="ok"
+									oncomplete="PF('dlgPecas').hide()" ignoreAutoUpdate="true"
+									style="width: 15%;">
+								</p:commandButton>
+
+							</f:facet>
+							<p:ajax event="rowSelect" process="pecasTable" update="btSelect" />
+						</p:dataTable>
+					</h:panelGroup>
+				</p:dialog>
+
+				<p:separator />
+
+				<div class="tableDetalhes">
+					<ui:include src="/controle/garantia/garantiadetalhe.xhtml" />
+				</div>
+
+
+			</div>
+		</h:form>
+
+	</ui:define>
+
+</ui:composition>

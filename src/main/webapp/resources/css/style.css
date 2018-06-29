@@ -1,0 +1,272 @@
+.navbar-brand {
+	padding-top: 12px;
+}
+
+.panel-default {
+	margin-left: 10px;
+	margin-right: 10px;
+}
+
+/*PANELGRID*/
+.ui-panelgrid.panelgrid-noborder .ui-grid-responsive {
+	border: none;
+}
+
+.ui-panelgrid.panelgrid-withborder .ui-grid-responsive {
+	border: 1px solid #dddddd;
+}
+
+@MEDIA ( max-width : 640px) {
+	.ui-panelgrid.panelgrid-noborder .ui-grid-responsive .ui-grid-row {
+		border: none;
+	}
+}
+
+@MEDIA ( max-width :540px) {
+	.img-responsive {
+		position: relative;
+		top: 50%;
+		left: -35%;
+	}
+}
+
+/*Imagem responsiva*/
+.img-responsive {
+	display: block;
+	max-width: 100%;
+	height: auto;
+	margin-left: 35%;
+}
+
+/*campos calendar*/
+.ui-fluid .ui-calendar, .ui-fluid .ui-calendar input {
+	width: 35% !important;
+}
+
+@media ( max-width :390px) {
+	.ui-fluid .ui-calendar, .ui-fluid .ui-calendar input {
+		width: 60% !important;
+	}
+}
+
+/*caminho de pão*/
+@media ( max-width : 1200px) {
+	.x_title h2 {
+		width: 62% !important;
+		font-size: 12px !important;
+	}
+}
+
+.botao {
+	height: 30px;
+	width: 80px;
+	color: #ffffff !important;
+	font-size: 12px !important;
+	background: none;
+	background-color: #2A3F54 !important;
+	background-image: none !important;
+	text-shadow: none !important;
+	font-weight: bold;
+	background-position: 20px center !important;
+	background-repeat: no-repeat !important;
+	margin-left: 5px;
+	box-shadow: none !important;
+	border: none !important;
+	margin-top: 5px !important;
+}
+
+.toolBar {
+	margin: 10px 0 10px 0;
+}
+
+.ajax-gif {
+	width: 10%;
+	z-index: 1;
+	position: absolute;
+	left: 50%;
+	top: 50%
+}
+
+/*Upload*/
+.ui-fileupload.custom .ui-widget-header {
+	border: none !important;
+	background: none !important;
+}
+
+/*linhas table*/
+.ui-datatable tbody td {
+	border: 2px solid #d8d8d8 !important;
+}
+
+/*steps*/
+.ui-steps .ui-steps-item {
+	width: 24%;
+}
+
+.ui-state-highlight {
+	text-shadow: none !important;
+}
+
+.ui-steps.custom {
+	margin-bottom: 30px;
+}
+
+.ui-steps.custom .ui-steps-item .ui-menuitem-link {
+	height: 10px;
+	padding: 0 1em;
+}
+
+.ui-steps.custom .ui-steps-item .ui-steps-number {
+	background-color: #2A3F54;
+	color: #FFFFFF;
+	display: inline-block;
+	width: 30px;
+	border-radius: 10px;
+	margin-top: -10px;
+	margin-bottom: 10px;
+}
+
+.ui-steps.custom .ui-steps-item.ui-state-highlight .ui-menuitem-link,
+	.ui-steps .ui-steps-item.ui-state-disabled .ui-menuitem-link {
+	background: #2A3F54;
+}
+
+/*Gráfico*/
+table.jqplot-table-legend, table.jqplot-cursor-legend {
+	font-size: 13px !important;
+	color: #666666 !important;
+	font-family: "Open Sans", "Roboto", "Helvetica", "Arial", sans-serif;
+}
+
+.jqplot-target {
+	position: relative;
+	color: #FFFFFF !important;
+	font-family: "Myriad Pro";
+	font-size: 16px !important;
+	text-shadow: 0.1em 0.1em 0.2em black !important;
+}
+
+table.jqplot-table-legend, table.jqplot-cursor-legend {
+	background-color: rgba(255, 255, 255, 0.6);
+	border: 0px solid #cccccc;
+	font-family: "Open Sans", "Roboto", "Helvetica", "Arial", sans-serif;
+	position: absolute;
+	font-size: 0.75em;
+	margin-left: 30px;
+	text-indent: 10px;
+	line-height: 200%;
+	text-shadow: 0.0em 0.0em 0.0em black !important;
+}
+
+.jqplot-title {
+	top: 0px;
+	left: 0px;
+	font-family: "Open Sans", "Roboto", "Helvetica", "Arial", sans-serif;
+	padding-bottom: 0.5em;
+	font-size: 16px;
+	font-weight: bold;
+	color: #000000 !important;
+	text-shadow: 0.0em 0.0em 0.0em black !important;
+}
+
+div.jqplot-table-legend-swatch {
+	width: 0px;
+	height: 0px;
+	border-top-width: 5px;
+	border-bottom-width: 5px;
+	border-left-width: 5px;
+	border-right-width: 5px;
+	border-top-style: solid;
+	border-bottom-style: solid;
+	border-left-style: solid;
+	border-right-style: solid;
+	border-radius: 10px;
+}
+
+div.jqplot-table-legend-swatch-outline {
+	border: 0px solid #cccccc;
+	padding: 1px;
+	border-radius: 10px;
+}
+
+.display-resonsive {
+	display: block !important;
+}
+
+@media ( max-width :690px) {
+	.display-resonsive {
+		display: none !important;
+	}
+}
+
+/*selecao table
+.ui-datatable tr.ui-state-highlight:hover {
+	color: #d02f08 !important;
+}
+
+.ui-datatable tr.ui-state-highlight {
+	color: #d02f08 !important;
+}*/
+
+/* higthlight table*/
+.ui-state-highlight, .ui-widget-content .ui-state-highlight,
+	.ui-widget-header .ui-state-highlight {
+	background-image: linear-gradient(to bottom, rgb(50, 69, 84), #080d11)
+		!important;
+}
+
+/*check datatable*/
+.ui-state-highlight .ui-icon {
+	background-image:
+		url(/wildtest/javax.faces.resource/images/ui-icons_333333_256x240.png.xhtml?ln=primefaces-bootstrap)
+		!important;
+}
+
+/*Campo desabilitado*/
+.ui-state-disabled, .ui-widget-content .ui-state-disabled,
+	.ui-widget-header .ui-state-disabled {
+	cursor: not-allowed !important;
+}
+
+.ui-selectonemenu.ui-state-disabled .ui-selectonemenu-trigger,
+	.ui-selectonemenu.ui-state-disabled .ui-selectonemenu-label {
+	cursor: not-allowed !important;
+	color: #737373 !important;
+	font-weight: 600 !important;
+}
+
+/* label checkbox*/
+.ui-chkbox .ui-chkbox-label {
+	margin: -2px 0 0 6px !important;
+	font-weight: 700 !important;
+}
+
+/*notificação*/
+.notificacao {
+	width: 87% !important;
+	left: 14% !important;
+	padding: 25px !important;
+	opacity: 0.6;
+	filter: alpha(opacity = 60);
+}
+
+@media screen and (max-width: 1280px) {
+	.notificacao {
+		left: 18% !important;
+	}
+}
+
+/*graficos*/
+
+
+@media screen and (max-width: 1280px) {
+	.jqplot-table-legend-label {
+		font-size: 11px;
+	}
+}
+
+@media screen and (max-width: 990px) {
+	.jqplot-target {
+		display: none;
+	}
+}

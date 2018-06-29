@@ -1,0 +1,111 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" xmlns:o="http://omnifaces.org/ui"
+	template="/WEB-INF/template/Layout.xhtml" contentType="text/html">
+
+	<div class="ui-fluid">
+		<ui:define name="caminhoDePao">CADASTROS - <b>CONSULTA
+				MAPA DE EQUIPAMENTOS</b>
+		</ui:define>
+	</div>
+	<ui:define name="conteudo">
+
+
+		<h:form id="frm">
+			<p:toolbar styleClass="toolBar">
+
+				<p:toolbarGroup align="right">
+					<p:commandButton id="btPes" styleClass="botao" value="Pesquisar"
+						actionListener="#{controladorMapaEquipamentos.pesquisar()}"
+						icon="fa fa-search"
+						style="width: 90px; margin-top: 1px !important;"
+						process="@this empresa" update="panelTable" />
+				</p:toolbarGroup>
+			</p:toolbar>
+
+			<div id="msgs">
+				<p:messages id="msg" autoUpdate="false" closable="true" />
+			</div>
+			<div class="ui-fluid">
+				<p:panelGrid id="panelMain" columns="4"
+					columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4"
+					layout="grid" styleClass="ui-panelgrid-blank">
+
+					<p:outputLabel for="empresa" value="Empresa" />
+					<p:selectOneMenu id="empresa"
+						value="#{controladorMapaEquipamentos.empresa}">
+						<f:selectItem itemLabel="-------" itemValue="" />
+						<f:selectItems value="#{controladorMapaEquipamentos.empresas}"
+							var="emp" itemLabel="#{emp.nomeFantasia}" itemValue="#{emp}" />
+
+					</p:selectOneMenu>
+
+				</p:panelGrid>
+
+				<p:separator />
+
+				<p:panelGrid id="panelTable" columns="1"
+					columnClasses="ui-grid-col-12" layout="grid"
+					styleClass="ui-panelgrid-blank">
+					<p:dataTable id="tableMapa"
+						value="#{controladorMapaEquipamentos.mapa}" var="m"
+						rowKey="#{m.id}" emptyMessage="Nenhum Registro Encontrado."
+						rows="10" paginator="true" paginatorAlwaysVisible="false"
+						paginatorPosition="bottom">
+						<f:facet name="header">
+							Mapa de Equipamentos
+						</f:facet>
+
+						<p:column style="width:16px">
+							<p:rowToggler />
+						</p:column>
+
+						<p:ajax event="rowToggle"
+							listener="#{controladorMapaEquipamentos.onRowToggle}"
+							process="@this" />
+
+						<p:column headerText="ID" style="width: 3%;">
+							<h:outputLabel value="#{m.id}" />
+						</p:column>
+
+						<p:column headerText="Descrição" style="width: 25%;">
+							<h:outputLabel value="#{m.descricao}" />
+						</p:column>
+
+						<p:column headerText="Quantidade" style="width: 10%;">
+							<h:outputLabel value="#{m.qtd}" />
+						</p:column>
+
+						<p:rowExpansion>
+							<p:dataTable id="tableMapa"
+								value="#{controladorMapaEquipamentos.setores}" var="s"
+								emptyMessage="Nenhum Registro Encontrado." rows="10"
+								paginator="true" paginatorAlwaysVisible="false"
+								paginatorPosition="bottom" style="width: 50%;margin: 0 auto;">
+								<f:facet name="header">
+										Local dos Equipamentos
+								    </f:facet>
+
+								<p:column headerText="ID" style="width: 3%;">
+									<h:outputLabel value="#{s.id}" />
+								</p:column>
+
+								<p:column headerText="Setor" style="width: 10%;">
+									<h:outputLabel value="#{s.descricao}" />
+								</p:column>
+
+							</p:dataTable>
+						</p:rowExpansion>
+
+					</p:dataTable>
+				</p:panelGrid>
+
+
+			</div>
+		</h:form>
+
+	</ui:define>
+
+</ui:composition>
